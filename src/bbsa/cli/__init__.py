@@ -22,6 +22,7 @@ from bbsa.cli.formatters import (
 )
 from bbsa.cli.commands.finance import cmd_finance_invoices, cmd_finance_stats
 from bbsa.cli.commands.me import cmd_me
+from bbsa.skill import ensure_skill_installed
 from bbsa.cli.commands.misc import cmd_leaderboard, cmd_notifications
 from bbsa.cli.commands.programs import cmd_programs_list, cmd_programs_show
 from bbsa.cli.commands.reports import (
@@ -128,6 +129,8 @@ _SUBCOMMAND_CHILDREN = {"programs": ["list", "show"], "reports": ["list", "show"
 def main(argv: list[str] | None = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
+
+    ensure_skill_installed()
 
     try:
         parser = build_parser()

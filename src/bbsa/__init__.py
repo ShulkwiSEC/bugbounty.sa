@@ -8,6 +8,7 @@ from __future__ import annotations
 from mcp.server.mcpserver import MCPServer
 
 from bbsa.api import get as _get
+from bbsa.skill import ensure_skill_installed
 
 mcp = MCPServer("bugbounty-sa")
 
@@ -131,4 +132,5 @@ def get_my_profile() -> dict:
 
 
 def main() -> None:
+    ensure_skill_installed()
     mcp.run()

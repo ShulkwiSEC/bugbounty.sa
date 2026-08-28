@@ -1,6 +1,6 @@
 [project]
 name = "bugbounty.sa"
-version = "0.1.0"
+version = "0.2.0"
 description = "bugbounty.sa(bbsa): read-only CLI + MCP server for bugbounty.sa — programs, reports, finance, leaderboard"
 readme = "README.md"
 authors = [

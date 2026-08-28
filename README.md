@@ -17,7 +17,19 @@ Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query pr
 
 ## Install
 
-Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
+Requires Python 3.12+.
+
+### From PyPI (recommended)
+
+```bash
+uvx bugbounty.sa
+# or install permanently:
+uv tool install bugbounty.sa
+# or with pip:
+pip install bugbounty.sa
+```
+
+### From source (dev)
 
 ```bash
 uv tool install git+https://github.com/ShulkwiSEC/bugbounty.sa
@@ -25,7 +37,42 @@ uv tool install git+https://github.com/ShulkwiSEC/bugbounty.sa
 uv pip install -e .
 ```
 
-Dependencies: [`httpx`](https://www.python-httpx.org/) (HTTP), [`mcp`](https://github.com/modelcontextprotocol/python-sdk) (MCP server). Build backend: [`uv_build`](https://docs.astral.sh/uv/concepts/build-backend/). The distribution is published on PyPI as `bugbounty.sa`; the import package is `bbsa`.
+## Agent skill (auto-install)
+
+The package ships a [skills.sh](https://skills.sh)-compatible agent skill. The first run of `bbsa` or `bbsa-mcp` silently installs it into every detected coding agent — no user interaction:
+
+| Agent | Skill location |
+|---|---|
+| Claude Code | `~/.claude/skills/bbsa/` |
+| Codex | `~/.codex/skills/bbsa/` |
+| opencode | `~/.config/opencode/skills/bbsa/` * |
+
+*opencode auto-loads `~/.claude/skills`, so its own folder is skipped while Claude Code is present to avoid duplicates.
+
+The install is idempotent: it skips when the bundled `SKILL.md` already matches, so the CLI stays silent on every run after the first.
+
+### Manual install
+
+To install (or refresh) the skill by hand, copy `SKILL.md` from [the repo](https://github.com/ShulkwiSEC/bugbounty.sa/blob/main/SKILL.md) into the target agent's folder:
+
+```bash
+# Claude Code (also covers opencode)
+mkdir -p ~/.claude/skills/bbsa
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+  -o ~/.claude/skills/bbsa/SKILL.md
+
+# Codex
+mkdir -p ~/.codex/skills/bbsa
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+  -o ~/.codex/skills/bbsa/SKILL.md
+
+# opencode (only if you don't use Claude Code)
+mkdir -p ~/.config/opencode/skills/bbsa
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+  -o ~/.config/opencode/skills/bbsa/SKILL.md
+```
+
+Then restart your agent — skills are loaded at startup.
 
 ## Setup
 
@@ -76,6 +123,8 @@ Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `--debug` prints full t
 
 ### MCP server
 
+After installing from PyPI (`uvx bugbounty.sa` or `uv tool install bugbounty.sa`), `bbsa-mcp` is on your PATH:
+
 ```json
 {
   "mcpServers": {
@@ -87,15 +136,14 @@ Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `--debug` prints full t
 }
 ```
 
-Or via `uv run`:
+Or run directly without installing:
 
 ```json
 {
   "mcpServers": {
     "bugbounty.sa": {
-      "command": "uv",
-      "args": ["run", "bbsa-mcp"],
-      "cwd": "/path/to/repo",
+      "command": "uvx",
+      "args": ["bugbounty.sa", "bbsa-mcp"],
       "env": { "BUGBOUNTY_SA_TOKEN": "<your-token>" }
     }
   }
