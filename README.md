@@ -1,14 +1,12 @@
 # bugbounty.sa (bbsa)
+![bbsa demo](demo.gif)
+
 
 Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query programs, reports, invoices, the leaderboard, and notifications from your terminal or your agent. Report submission stays strictly manual.
 
 - **CLI:** `bbsa`
-- **MCP server:** `bugbounty-sa-mcp`
+- **MCP server:** `bbsa-mcp`
 - **Repo:** [github.com/ShulkwiSEC/bugbounty.sa](https://github.com/ShulkwiSEC/bugbounty.sa)
-
-## Demo
-
-![bbsa demo](demo.gif)
 
 ## Features
 
@@ -82,7 +80,7 @@ Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `--debug` prints full t
 {
   "mcpServers": {
     "bugbounty.sa": {
-      "command": "bugbounty-sa-mcp",
+      "command": "bbsa-mcp",
       "env": { "BUGBOUNTY_SA_TOKEN": "<your-token>" }
     }
   }
@@ -96,7 +94,7 @@ Or via `uv run`:
   "mcpServers": {
     "bugbounty.sa": {
       "command": "uv",
-      "args": ["run", "bugbounty-sa-mcp"],
+      "args": ["run", "bbsa-mcp"],
       "cwd": "/path/to/repo",
       "env": { "BUGBOUNTY_SA_TOKEN": "<your-token>" }
     }

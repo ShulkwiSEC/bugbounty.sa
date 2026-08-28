@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-bugbounty-sa-mcp = "bbsa:main"
+bbsa-mcp = "bbsa:main"
 bbsa = "bbsa.cli:main"
 
 [project.urls]
