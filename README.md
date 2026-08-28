@@ -22,7 +22,8 @@ Requires Python 3.12+.
 ### From PyPI (recommended)
 
 ```bash
-uvx bugbounty.sa
+# run without installing
+uvx --from bugbounty.sa bbsa
 # or install permanently:
 uv tool install bugbounty.sa
 # or with pip:
@@ -123,7 +124,7 @@ Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `--debug` prints full t
 
 ### MCP server
 
-After installing from PyPI (`uvx bugbounty.sa` or `uv tool install bugbounty.sa`), `bbsa-mcp` is on your PATH:
+After installing from PyPI (`uv tool install bugbounty.sa` or `pip install bugbounty.sa`), `bbsa-mcp` is on your PATH:
 
 ```json
 {
@@ -143,7 +144,7 @@ Or run directly without installing:
   "mcpServers": {
     "bugbounty.sa": {
       "command": "uvx",
-      "args": ["bugbounty.sa", "bbsa-mcp"],
+      "args": ["--from", "bugbounty.sa", "bbsa-mcp"],
       "env": { "BUGBOUNTY_SA_TOKEN": "<your-token>" }
     }
   }
