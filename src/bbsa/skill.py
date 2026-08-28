@@ -9,6 +9,7 @@ Agent skill roots (skill dir is ``<root>/bbsa/SKILL.md``):
 
 - Claude Code: ``~/.claude/skills``
 - Codex:       ``~/.codex/skills``
+- AGY:         ``~/.gemini/antigravity-cli/skills``
 - opencode:    ``~/.config/opencode/skills`` (skipped when Claude Code is
   detected because opencode auto-loads ``~/.claude/skills``)
 
@@ -29,6 +30,7 @@ SKILL_NAME = "bbsa"
 _AGENTS: tuple[tuple[str, str], ...] = (
     ("Claude Code", "~/.claude/skills"),
     ("Codex", "~/.codex/skills"),
+    ("AGY", "~/.gemini/antigravity-cli/skills"),
     ("opencode", "~/.config/opencode/skills"),
 )
 
@@ -98,12 +100,14 @@ def _self_check() -> None:
     home = Path(os.environ["HOME"])
     (home / ".claude").mkdir(parents=True)
     (home / ".codex").mkdir(parents=True)
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
     (home / ".config" / "opencode").mkdir(parents=True)
 
     installed = [name for name, _ in install_skill()]
-    assert set(installed) == {"Claude Code", "Codex"}, installed
+    assert set(installed) == {"Claude Code", "Codex", "AGY"}, installed
     assert (home / ".claude" / "skills" / "bbsa" / "SKILL.md").exists()
     assert (home / ".codex" / "skills" / "bbsa" / "SKILL.md").exists()
+    assert (home / ".gemini" / "antigravity-cli" / "skills" / "bbsa" / "SKILL.md").exists()
     assert not (home / ".config" / "opencode" / "skills").exists(), (
         "opencode target must be skipped when Claude Code is present"
     )

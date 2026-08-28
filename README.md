@@ -23,10 +23,10 @@ Requires Python 3.12+.
 
 ### Native installer (recommended)
 
-The interactive installer installs or updates `uv`, `bbsa`, `bbsa-mcp`, and the bundled skill for detected coding agents on macOS and Linux:
+The interactive installer installs or updates `uv`, `bbsa`, and `bbsa-mcp` on macOS and Linux. It then lets you select Claude Code, Codex, AGY, OpenCode, or all of them with the arrow keys and Space, and prints the MCP and missing-skill setup to copy and paste:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | bash
 ```
 
 Inspect it before running:
@@ -35,10 +35,10 @@ Inspect it before running:
 curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | less
 ```
 
-For agents and CI, skip the confirmation prompt:
+For agents and CI, skip prompts and print setup for every supported agent:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh -s -- --yes
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | bash -s -- --yes
 ```
 
 ### From PyPI
@@ -68,6 +68,7 @@ The package ships a [skills.sh](https://skills.sh)-compatible agent skill. The f
 |---|---|
 | Claude Code | `~/.claude/skills/bbsa/` |
 | Codex | `~/.codex/skills/bbsa/` |
+| AGY | `~/.gemini/antigravity-cli/skills/bbsa/` |
 | opencode | `~/.config/opencode/skills/bbsa/` * |
 
 *opencode auto-loads `~/.claude/skills`, so its own folder is skipped while Claude Code is present to avoid duplicates.
@@ -76,22 +77,27 @@ The install is idempotent: it skips when the bundled `SKILL.md` already matches,
 
 ### Manual install
 
-To install (or refresh) the skill by hand, copy `SKILL.md` from [the repo](https://github.com/ShulkwiSEC/bugbounty.sa/blob/main/SKILL.md) into the target agent's folder:
+To install (or refresh) the skill by hand, copy [`SKILL.md`](https://github.com/ShulkwiSEC/bugbounty.sa/blob/main/src/bbsa/SKILL.md) into the target agent's folder:
 
 ```bash
 # Claude Code (also covers opencode)
 mkdir -p ~/.claude/skills/bbsa
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/src/bbsa/SKILL.md \
   -o ~/.claude/skills/bbsa/SKILL.md
 
 # Codex
 mkdir -p ~/.codex/skills/bbsa
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/src/bbsa/SKILL.md \
   -o ~/.codex/skills/bbsa/SKILL.md
+
+# AGY
+mkdir -p ~/.gemini/antigravity-cli/skills/bbsa
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/src/bbsa/SKILL.md \
+  -o ~/.gemini/antigravity-cli/skills/bbsa/SKILL.md
 
 # opencode (only if you don't use Claude Code)
 mkdir -p ~/.config/opencode/skills/bbsa
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/SKILL.md \
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/src/bbsa/SKILL.md \
   -o ~/.config/opencode/skills/bbsa/SKILL.md
 ```
 

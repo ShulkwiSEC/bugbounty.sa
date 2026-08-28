@@ -24,7 +24,7 @@ If `bbsa` is not on PATH, run the latest release without installing: `uvx --refr
 For a user-authorized install or update of the CLI, MCP server, and agent skill:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh -s -- --yes
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | bash -s -- --yes
 ```
 
 ## Auth
