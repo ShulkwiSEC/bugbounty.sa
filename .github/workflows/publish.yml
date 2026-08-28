@@ -17,6 +17,15 @@ jobs:
       - name: Build sdist and wheel
         run: uv build
 
+      - name: Check PyPI token
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.UV_PUBLISH_TOKEN }}
+        run: |
+          if [ -z "$UV_PUBLISH_TOKEN" ]; then
+            echo "::error::Secret UV_PUBLISH_TOKEN is empty. Add it under Settings > Secrets and variables > Actions with this exact name, scoped to project 'bugbounty.sa' with Upload permission."
+            exit 1
+          fi
+
       - name: Publish to PyPI
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.UV_PUBLISH_TOKEN }}
