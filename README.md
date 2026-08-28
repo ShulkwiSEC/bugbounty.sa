@@ -1,6 +1,6 @@
 # bugbounty.sa (bbsa)
 
-| CLI Mode (`bbsa`) | Agent / MCP Mode (`claude -p`) |
+| CLI Mode (`bbsa`) | Agent / MCP Mode (`anthropic(claude)`) |
 | :---: | :---: |
 | ![bbsa demo](demo.gif) | ![bbsa-mcp demo](claude-demo.gif) |
 
