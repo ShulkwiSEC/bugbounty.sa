@@ -2,7 +2,8 @@
 
 The skill (``SKILL.md``) is bundled inside the wheel next to this module and
 gets copied, idempotently, into each detected agent's skill directory on the
-first run of ``bbsa`` or ``bbsa-mcp``. No user interaction.
+first run of ``bbsa`` or ``bbsa-mcp``. Changed skill content replaces older
+installed copies on the next run. No user interaction.
 
 Agent skill roots (skill dir is ``<root>/bbsa/SKILL.md``):
 

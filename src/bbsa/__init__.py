@@ -8,6 +8,7 @@ from __future__ import annotations
 from mcp.server.mcpserver import MCPServer
 
 from bbsa.api import get as _get
+from bbsa.api import get_report as _get_report
 from bbsa.skill import ensure_skill_installed
 
 mcp = MCPServer("bugbounty-sa")
@@ -33,14 +34,14 @@ def get_program_scope(program_id: int) -> dict:
 
 @mcp.tool()
 def list_reports() -> dict:
-    """List your submitted reports with triage status."""
+    """List submitted reports; each item includes its numeric report ID."""
     return _get("/reports")
 
 
 @mcp.tool()
 def get_report(report_id_or_slug: str) -> dict:
-    """Get single report detail by ID or slug."""
-    return _get(f"/reports/{report_id_or_slug}")
+    """Get report detail and comments by numeric ID or slug."""
+    return _get_report(report_id_or_slug)
 
 
 @mcp.tool()

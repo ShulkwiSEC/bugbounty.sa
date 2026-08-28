@@ -84,3 +84,26 @@ def get(path: str, params: dict | None = None) -> dict:
         retryable=r.status_code >= 500,
         status=r.status_code,
     )
+
+
+def get_report(report_id_or_slug: str) -> dict:
+    """Get a report with comments, resolving numeric IDs through the report list."""
+    ref = str(report_id_or_slug)
+    if ref.isdigit():
+        reports = get("/reports").get("data") or []
+        report = next((item for item in reports if str(item.get("id")) == ref), None)
+        if not report or not report.get("slug"):
+            raise ApiError(f"Report {ref} not found.", code="not_found", status=404)
+        ref = str(report["slug"])
+
+    response = get(f"/reports/{ref}")
+    data = response.get("data")
+    if isinstance(data, dict):
+        response = {
+            **response,
+            "data": {
+                **data,
+                "comments": get(f"/reports/{ref}/comments").get("data") or [],
+            },
+        }
+    return response
