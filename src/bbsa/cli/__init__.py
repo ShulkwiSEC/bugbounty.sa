@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from importlib.metadata import version
 
 from bbsa import api
 from bbsa.cli.formatters import (
@@ -62,6 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
         "\nPipeline-friendly: bbsa leaderboard --json | jq -r '.data[] | \"\\\\(.rank) \\\\(.username)\"'",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+    parser.add_argument("-V", "--version", action="version", version=f"%(prog)s {version('bugbounty.sa')}")
     sub = parser.add_subparsers(dest="subcommand", title="Commands")
 
     # me
