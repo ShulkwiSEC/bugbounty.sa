@@ -2,8 +2,10 @@ name: publish
 
 on:
   push:
-    tags: ["v*"]
-  workflow_dispatch:
+    branches: [main]
+
+permissions:
+  contents: write
 
 jobs:
   publish:
@@ -13,6 +15,13 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+
+      - name: Set version
+        run: |
+          BASE_VERSION=$(uv version --short)
+          VERSION="${BASE_VERSION%.*}.${GITHUB_RUN_NUMBER}"
+          uv version "$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Build sdist and wheel
         run: uv build
@@ -29,4 +38,11 @@ jobs:
       - name: Publish to PyPI
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.UV_PUBLISH_TOKEN }}
-        run: uv publish
+        run: uv publish --check-url https://pypi.org/simple
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "v$VERSION" || gh release create "v$VERSION" --generate-notes --target "$GITHUB_SHA"
+          gh release upload "v$VERSION" dist/* --clobber
