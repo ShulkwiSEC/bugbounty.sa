@@ -1,0 +1,29 @@
+[project]
+name = "bugbounty.sa"
+version = "0.1.0"
+description = "bugbounty.sa(bbsa): read-only CLI + MCP server for bugbounty.sa — programs, reports, finance, leaderboard"
+readme = "README.md"
+authors = [
+    { name = "shulkwisec", email = "shulkwisec@gmail.com" }
+]
+keywords = ["bugbounty", "mcp", "cli", "bug-bounty", "security", "researcher"]
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=1.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+bugbounty-sa-mcp = "bbsa:main"
+bbsa = "bbsa.cli:main"
+
+[project.urls]
+Repository = "https://github.com/ShulkwiSEC/bugbounty.sa"
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+# Distribution is "bugbounty.sa"; the import package/module dir is "bbsa".
+[tool.uv.build-backend]
+module-name = "bbsa"
