@@ -106,23 +106,18 @@ Or via `uv run`:
 
 Tools: `list_programs`, `get_program_scope`, `list_reports`, `get_report`, `get_report_stats`, `get_wallet_balance`, `list_invoices`, `get_invoice_stats`, `list_transactions`, `get_transaction_stats`, `get_public_leaderboard`, `list_companies`, `get_company`, `list_notifications`. Resource: `bugbounty://me/profile` (`GET /me`).
 
-## Caveats
+## Example
 
-- **Read-only, intentionally.** Report submission, profile edits, and all other mutations remain manual on the bugbounty.sa web UI — by design, so an agent can never accidentally submit or modify.
-- **Role-gated endpoints.** `wallet/balance`, `transactions`, and `companies` return `403` for researcher tokens. They work with admin/company tokens; the CLI omits them to keep the surface honest.
-- **Unofficial.** Built from [a reverse-engineered API reference](.tmp/bugbounty-sa-api-doc.md); endpoints may change without notice.
+Agent prompts that work with the MCP server connected to your client (the agent calls the tools itself — no CLI needed):
 
-## Data model & scripts
+1. **Investigate your open work**
+   > "List my reports, then for any still in triage pull the full detail and summarize the status, severity, and next step I should take for each."
 
-```
-src/bbsa/
-  api.py            shared GET + error mapping (the only HTTP code)
-  __init__.py       MCP server (tools + resource)
-  cli/
-    __init__.py     argparse surface, dispatcher
-    formatters.py   JSON envelopes, exit codes, tables, colors
-    commands/       one module per resource
-```
+2. **Recon a program before hunting**
+   > "Show me the active programs, then for the highest-bounty public one give me its full scope, reward ranges, and target domains."
+
+3. **Market-scan as a researcher**
+   > "Write a short briefing: who's leading the researcher leaderboard, which recent notifications or new programs are relevant to me, and how my profile compares."
 
 ## Contributing
 
@@ -130,4 +125,4 @@ Issues and PRs welcome at [github.com/ShulkwiSEC/bugbounty.sa/issues](https://gi
 
 ## License
 
-Not yet licensed — see the author before reuse.
+[Apache-2.0](LICENSE) — full text in [`LICENSE`](LICENSE).
