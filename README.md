@@ -1,6 +1,8 @@
 # bugbounty.sa (bbsa)
-![bbsa demo](demo.gif)
 
+| CLI Mode (`bbsa`) | Agent / MCP Mode (`claude -p`) |
+| :---: | :---: |
+| ![bbsa demo](demo.gif) | ![bbsa-mcp demo](claude-demo.gif) |
 
 Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query programs, reports, invoices, the leaderboard, and notifications from your terminal or your agent. Report submission stays strictly manual.
 
