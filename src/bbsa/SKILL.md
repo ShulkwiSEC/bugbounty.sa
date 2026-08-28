@@ -19,7 +19,13 @@ Use when the user wants data from bugbounty.sa: profile, programs, reports, invo
 1. **MCP tools** — if connected to `bbsa-mcp`, call the tools directly; no shell needed.
 2. **CLI** — otherwise shell out to `bbsa`. Use `--json` when reasoning over results; plain output is for humans.
 
-If `bbsa` is not on PATH, run it without installing: `uvx --from bugbounty.sa bbsa`.
+If `bbsa` is not on PATH, run the latest release without installing: `uvx --refresh-package bugbounty.sa --from bugbounty.sa bbsa`.
+
+For a user-authorized install or update of the CLI, MCP server, and agent skill:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh -s -- --yes
+```
 
 ## Auth
 

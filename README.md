@@ -21,11 +21,31 @@ Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query pr
 
 Requires Python 3.12+.
 
-### From PyPI (recommended)
+### Native installer (recommended)
+
+The interactive installer installs or updates `uv`, `bbsa`, `bbsa-mcp`, and the bundled skill for detected coding agents on macOS and Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh
+```
+
+Inspect it before running:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | less
+```
+
+For agents and CI, skip the confirmation prompt:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | sh -s -- --yes
+```
+
+### From PyPI
 
 ```bash
 # run without installing
-uvx --from bugbounty.sa bbsa
+uvx --refresh-package bugbounty.sa --from bugbounty.sa bbsa
 # or install permanently:
 uv tool install bugbounty.sa
 # or with pip:
@@ -146,7 +166,7 @@ Or run directly without installing:
   "mcpServers": {
     "bugbounty.sa": {
       "command": "uvx",
-      "args": ["--from", "bugbounty.sa", "bbsa-mcp"],
+      "args": ["--refresh-package", "bugbounty.sa", "--from", "bugbounty.sa", "bbsa-mcp"],
       "env": { "BUGBOUNTY_SA_TOKEN": "<your-token>" }
     }
   }
