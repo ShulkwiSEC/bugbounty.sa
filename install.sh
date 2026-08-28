@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
+
+# Accept the common `curl ... | sh` form, while keeping the interactive UI in Bash.
+if [ -z "${BASH_VERSION:-}" ]; then
+    command -v bash >/dev/null 2>&1 || {
+        printf 'bbsa installer: bash is required\n' >&2
+        exit 1
+    }
+    if [ -f "$0" ]; then
+        exec bash "$0" "$@"
+    elif command -v curl >/dev/null 2>&1; then
+        exec bash -c 'curl -fsSL https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | bash -s -- "$@"' sh "$@"
+    elif command -v wget >/dev/null 2>&1; then
+        exec bash -c 'wget -qO- https://raw.githubusercontent.com/ShulkwiSEC/bugbounty.sa/main/install.sh | bash -s -- "$@"' sh "$@"
+    else
+        printf 'bbsa installer: curl or wget is required\n' >&2
+        exit 1
+    fi
+fi
+
 set -euo pipefail
 
 YES=0
