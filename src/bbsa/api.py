@@ -1,6 +1,6 @@
 """Shared HTTP layer for bugbounty.sa — used by both the MCP server and the CLI.
 
-Read-only by design: the only verb ever issued is GET.
+Reads are GET; the one write is POST /programs/{id}/reports (report submission).
 """
 
 from __future__ import annotations
@@ -22,6 +22,16 @@ HEADERS = {
 }
 
 
+def _base_url() -> str:
+    """Where requests go. ``BBSA_API_URL`` repoints the client at a local mock
+    server so the write path can be exercised without filing a real report.
+
+    Test seam only: the bearer token is sent to whatever this resolves to, so
+    never point it at a host you do not control.
+    """
+    return os.environ.get("BBSA_API_URL", BASE_URL).rstrip("/")
+
+
 class ApiError(Exception):
     """Raised on any failed request. code + retryable let consumers act on it."""
 
@@ -40,19 +50,30 @@ class ApiError(Exception):
 
 def _err_text(r: httpx.Response) -> str:
     try:
-        return r.json().get("message") or r.text[:200]
+        body = r.json()
+        msg = body.get("message") or ""
+        errors = body.get("errors") or {}
+        if isinstance(errors, dict) and errors:
+            detail = "; ".join(
+                f"{field}: {v[0] if isinstance(v, list) and v else v}"
+                for field, v in errors.items()
+            )
+            return f"{msg} ({detail})" if msg else detail
+        return msg or r.text[:200]
     except Exception:
         return r.text[:200]
 
 
-def get(path: str, params: dict | None = None) -> dict:
-    """Single GET helper. Returns the full JSON envelope. Raises ApiError."""
+def _request(method: str, path: str, params: dict | None = None, json: dict | None = None) -> dict:
+    """Single request helper. Returns the full JSON envelope. Raises ApiError."""
     token = os.environ.get("BUGBOUNTY_SA_TOKEN", "")
     headers = dict(HEADERS)
     if token:
         headers["Authorization"] = f"Bearer {token}"
     try:
-        r = httpx.get(f"{BASE_URL}{path}", params=params, headers=headers, timeout=30)
+        r = httpx.request(
+            method, f"{_base_url()}{path}", params=params, json=json, headers=headers, timeout=30
+        )
     except httpx.HTTPError as exc:
         raise ApiError(
             f"Request to {path} failed: {exc}", code="network_error", retryable=True
@@ -78,12 +99,22 @@ def get(path: str, params: dict | None = None) -> dict:
         )
     if r.status_code == 404:
         raise ApiError(msg or "Not Found.", code="not_found", retryable=False, status=404)
+    if r.status_code == 422:
+        raise ApiError(msg or "Validation failed.", code="validation_error", status=422)
     raise ApiError(
         msg or "API error.",
         code="http_error",
         retryable=r.status_code >= 500,
         status=r.status_code,
     )
+
+
+def get(path: str, params: dict | None = None) -> dict:
+    return _request("GET", path, params=params)
+
+
+def post(path: str, payload: dict) -> dict:
+    return _request("POST", path, json=payload)
 
 
 def get_report(report_id_or_slug: str) -> dict:
