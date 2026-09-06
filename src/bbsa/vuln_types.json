@@ -1,0 +1,1370 @@
+[
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Unsafe Cross-Origin Resource Sharing",
+  "priority": null,
+  "id": "unsafe_cross_origin_resource_sharing"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Path Traversal",
+  "priority": null,
+  "id": "path_traversal"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Directory Listing Enabled - Sensitive Data Exposure",
+  "priority": null,
+  "id": "sensitive_data_exposure"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Directory Listing Enabled - Non-Sensitive Data Exposure",
+  "priority": 5,
+  "id": "non_sensitive_data_exposure"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Same-Site Scripting",
+  "priority": 5,
+  "id": "same_site_scripting"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "SSL Attack (BREACH, POODLE etc.)",
+  "priority": null,
+  "id": "ssl_attack_breach_poodle_etc"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Using Default Credentials",
+  "priority": 1,
+  "id": "using_default_credentials"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Misconfigured DNS - Basic Subdomain Takeover",
+  "priority": 3,
+  "id": "basic_subdomain_takeover"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Misconfigured DNS - High Impact Subdomain Takeover",
+  "priority": 2,
+  "id": "high_impact_subdomain_takeover"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Misconfigured DNS - Zone Transfer",
+  "priority": 4,
+  "id": "zone_transfer"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Misconfigured DNS - Missing Certification Authority Authorization (CAA) Record",
+  "priority": 5,
+  "id": "missing_caa_record"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Mail Server Misconfiguration - No Spoofing Protection on Email Domain",
+  "priority": 3,
+  "id": "no_spoofing_protection_on_email_domain"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Mail Server Misconfiguration - Email Spoofing to Inbox due to Missing or Misconfigured DMARC on Email Domain",
+  "priority": 4,
+  "id": "email_spoofing_to_inbox_due_to_missing_or_misconfigured_dmarc_on_email_domain"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Mail Server Misconfiguration - Email Spoofing to Spam Folder",
+  "priority": 5,
+  "id": "email_spoofing_to_spam_folder"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Mail Server Misconfiguration - Missing or Misconfigured SPF and/or DKIM",
+  "priority": 5,
+  "id": "missing_or_misconfigured_spf_and_or_dkim"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Mail Server Misconfiguration - Email Spoofing on Non-Email Domain",
+  "priority": 5,
+  "id": "email_spoofing_on_non_email_domain"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Database Management System (DBMS) Misconfiguration - Excessively Privileged User / DBA",
+  "priority": 4,
+  "id": "excessively_privileged_user_dba"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Password Confirmation - Change Email Address",
+  "priority": 5,
+  "id": "change_email_address"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Password Confirmation - Change Password",
+  "priority": 5,
+  "id": "change_password"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Password Confirmation - Delete Account",
+  "priority": 4,
+  "id": "delete_account"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Password Confirmation - Manage 2FA",
+  "priority": 5,
+  "id": "manage_two_fa"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "No Rate Limiting on Form - Registration",
+  "priority": 4,
+  "id": "registration"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "No Rate Limiting on Form - Login",
+  "priority": 4,
+  "id": "login"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "No Rate Limiting on Form - Email-Triggering",
+  "priority": 4,
+  "id": "email_triggering"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "No Rate Limiting on Form - SMS-Triggering",
+  "priority": 4,
+  "id": "sms_triggering"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Unsafe File Upload - No Antivirus",
+  "priority": 5,
+  "id": "no_antivirus"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Unsafe File Upload - No Size Limit",
+  "priority": 5,
+  "id": "no_size_limit"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Unsafe File Upload - File Extension Filter Bypass",
+  "priority": 5,
+  "id": "file_extension_filter_bypass"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Cookie Scoped to Parent Domain",
+  "priority": 5,
+  "id": "cookie_scoped_to_parent_domain"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Missing Secure or HTTPOnly Cookie Flag - Session Token",
+  "priority": 4,
+  "id": "session_token"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Missing Secure or HTTPOnly Cookie Flag - Non-Session Cookie",
+  "priority": 5,
+  "id": "non_session_cookie"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Clickjacking - Sensitive Click-Based Action",
+  "priority": 4,
+  "id": "sensitive_action"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Clickjacking - Form Input",
+  "priority": 5,
+  "id": "form_input"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Clickjacking - Non-Sensitive Action",
+  "priority": 5,
+  "id": "non_sensitive_action"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "OAuth Misconfiguration - Account Takeover",
+  "priority": 2,
+  "id": "account_takeover"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "OAuth Misconfiguration - Missing/Broken State Parameter",
+  "priority": null,
+  "id": "missing_state_parameter"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "OAuth Misconfiguration - Insecure Redirect URI",
+  "priority": null,
+  "id": "insecure_redirect_uri"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "CAPTCHA - Implementation Vulnerability",
+  "priority": 4,
+  "id": "implementation_vulnerability"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "CAPTCHA - Brute Force",
+  "priority": 5,
+  "id": "brute_force"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "CAPTCHA - Missing",
+  "priority": 5,
+  "id": "missing"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Exposed Admin Portal - To Internet",
+  "priority": 5,
+  "id": "to_internet"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Missing DNSSEC",
+  "priority": 5,
+  "id": "missing_dnssec"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Fingerprinting/Banner Disclosure",
+  "priority": 5,
+  "id": "fingerprinting_banner_disclosure"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Username/Email Enumeration - Brute Force",
+  "priority": 5,
+  "id": "brute_force"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Potentially Unsafe HTTP Method Enabled - OPTIONS",
+  "priority": 5,
+  "id": "options"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Potentially Unsafe HTTP Method Enabled - TRACE",
+  "priority": 5,
+  "id": "trace"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Insecure SSL - Lack of Forward Secrecy",
+  "priority": 5,
+  "id": "lack_of_forward_secrecy"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Insecure SSL - Insecure Cipher Suite",
+  "priority": 5,
+  "id": "insecure_cipher_suite"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Insecure SSL - Certificate Error",
+  "priority": 5,
+  "id": "certificate_error"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Reflected File Download (RFD)",
+  "priority": 5,
+  "id": "rfd"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - X-Frame-Options",
+  "priority": 5,
+  "id": "x_frame_options"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Cache-Control for a Non-Sensitive Page",
+  "priority": 5,
+  "id": "cache_control_for_a_non_sensitive_page"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - X-XSS-Protection",
+  "priority": 5,
+  "id": "x_xss_protection"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Strict-Transport-Security",
+  "priority": 5,
+  "id": "strict_transport_security"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - X-Content-Type-Options",
+  "priority": 5,
+  "id": "x_content_type_options"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Content-Security-Policy",
+  "priority": 5,
+  "id": "content_security_policy"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Public-Key-Pins",
+  "priority": 5,
+  "id": "public_key_pins"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - X-Content-Security-Policy",
+  "priority": 5,
+  "id": "x_content_security_policy"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - X-Webkit-CSP",
+  "priority": 5,
+  "id": "x_webkit_csp"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Content-Security-Policy-Report-Only",
+  "priority": 5,
+  "id": "content_security_policy_report_only"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Lack of Security Headers - Cache-Control for a Sensitive Page",
+  "priority": 4,
+  "id": "cache_control_for_a_sensitive_page"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Web Application Firewall (WAF) Bypass - Direct Server Access",
+  "priority": 4,
+  "id": "direct_server_access"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Race Condition",
+  "priority": null,
+  "id": "race_condition"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Cache Poisoning",
+  "priority": null,
+  "id": "cache_poisoning"
+ },
+ {
+  "parent": "Server Security Misconfiguration",
+  "name": "Bitsquatting",
+  "priority": 5,
+  "id": "bitsquatting"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "File Inclusion - Local",
+  "priority": 1,
+  "id": "local"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Parameter Pollution - Social Media Sharing Buttons",
+  "priority": 5,
+  "id": "social_media_sharing_buttons"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Remote Code Execution (RCE)",
+  "priority": 1,
+  "id": "remote_code_execution_rce"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "SQL Injection",
+  "priority": 1,
+  "id": "sql_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "XML External Entity Injection (XXE)",
+  "priority": 1,
+  "id": "xml_external_entity_injection_xxe"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "HTTP Response Manipulation - Response Splitting (CRLF)",
+  "priority": 3,
+  "id": "response_splitting_crlf"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - iframe Injection",
+  "priority": 3,
+  "id": "iframe_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - External Authentication Injection",
+  "priority": 4,
+  "id": "external_authentication_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Flash Based External Authentication Injection",
+  "priority": 5,
+  "id": "flash_based_external_authentication_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Email HTML Injection",
+  "priority": 4,
+  "id": "email_html_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Email Hyperlink Injection Based on Email Provider",
+  "priority": 5,
+  "id": "email_hyperlink_injection_based_on_email_provider"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Text Injection",
+  "priority": 5,
+  "id": "text_injection"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Homograph/IDN-Based",
+  "priority": 5,
+  "id": "homograph_idn_based"
+ },
+ {
+  "parent": "Server-Side Injection",
+  "name": "Content Spoofing - Right-to-Left Override (RTLO)",
+  "priority": 5,
+  "id": "rtlo"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Authentication Bypass",
+  "priority": 1,
+  "id": "authentication_bypass"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Second Factor Authentication (2FA) Bypass",
+  "priority": 3,
+  "id": "two_fa_bypass"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Privilege Escalation",
+  "priority": null,
+  "id": "privilege_escalation"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Cleartext Transmission of Session Token",
+  "priority": 4,
+  "id": "cleartext_transmission_of_session_token"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Login Function - Not Operational or Intended Public Access",
+  "priority": 5,
+  "id": "not_operational"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Login Function - Other Plaintext Protocol with no Secure Alternative",
+  "priority": 4,
+  "id": "other_plaintext_protocol_no_secure_alternative"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Login Function - LAN Only",
+  "priority": 4,
+  "id": "lan_only"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Login Function - HTTP and HTTPS Available",
+  "priority": 4,
+  "id": "http_and_https_available"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Login Function - HTTPS not Available or HTTP by Default",
+  "priority": 3,
+  "id": "https_not_available_or_http_by_default"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Session Fixation - Remote Attack Vector",
+  "priority": 3,
+  "id": "remote_attack_vector"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Session Fixation - Local Attack Vector",
+  "priority": 5,
+  "id": "local_attack_vector"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - On Logout (Client and Server-Side)",
+  "priority": 4,
+  "id": "on_logout"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - On Logout (Server-Side Only)",
+  "priority": 5,
+  "id": "on_logout_server_side_only"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - On Password Reset and/or Change",
+  "priority": 4,
+  "id": "on_password_change"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - Concurrent Sessions On Logout",
+  "priority": 5,
+  "id": "all_sessions"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - On Email Change",
+  "priority": 5,
+  "id": "on_email_change"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Failure to Invalidate Session - Long Timeout",
+  "priority": 5,
+  "id": "long_timeout"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Concurrent Logins",
+  "priority": 5,
+  "id": "concurrent_logins"
+ },
+ {
+  "parent": "Broken Authentication and Session Management",
+  "name": "Weak Registration Implementation - Over HTTP",
+  "priority": 4,
+  "id": "over_http"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Critically Sensitive Data - Password Disclosure",
+  "priority": 1,
+  "id": "password_disclosure"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Critically Sensitive Data - Private API Keys",
+  "priority": 1,
+  "id": "private_api_keys"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "EXIF Geolocation Data Not Stripped From Uploaded Images - Automatic User Enumeration",
+  "priority": 3,
+  "id": "automatic_user_enumeration"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "EXIF Geolocation Data Not Stripped From Uploaded Images - Manual User Enumeration",
+  "priority": 4,
+  "id": "manual_user_enumeration"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Visible Detailed Error/Debug Page - Detailed Server Configuration",
+  "priority": 4,
+  "id": "detailed_server_configuration"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Visible Detailed Error/Debug Page - Full Path Disclosure",
+  "priority": 5,
+  "id": "full_path_disclosure"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Visible Detailed Error/Debug Page - Descriptive Stack Trace",
+  "priority": 5,
+  "id": "descriptive_stack_trace"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Disclosure of Known Public Information",
+  "priority": 5,
+  "id": "disclosure_of_known_public_information"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Token Leakage via Referer - Trusted 3rd Party",
+  "priority": 5,
+  "id": "trusted_third_party"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Token Leakage via Referer - Untrusted 3rd Party",
+  "priority": 4,
+  "id": "untrusted_third_party"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Token Leakage via Referer - Over HTTP",
+  "priority": 4,
+  "id": "over_http"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Sensitive Token in URL - User Facing",
+  "priority": 4,
+  "id": "user_facing"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Sensitive Token in URL - In the Background",
+  "priority": 5,
+  "id": "in_the_background"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Sensitive Token in URL - On Password Reset",
+  "priority": 5,
+  "id": "on_password_reset"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Non-Sensitive Token in URL",
+  "priority": 5,
+  "id": "non_sensitive_token_in_url"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Weak Password Reset Implementation - Password Reset Token Sent Over HTTP",
+  "priority": 4,
+  "id": "password_reset_token_sent_over_http"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Weak Password Reset Implementation - Token Leakage via Host Header Poisoning",
+  "priority": 2,
+  "id": "token_leakage_via_host_header_poisoning"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Mixed Content (HTTPS Sourcing HTTP)",
+  "priority": 5,
+  "id": "mixed_content"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Sensitive Data Hardcoded - OAuth Secret",
+  "priority": 5,
+  "id": "oauth_secret"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Sensitive Data Hardcoded - File Paths",
+  "priority": 5,
+  "id": "file_paths"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Internal IP Disclosure",
+  "priority": 5,
+  "id": "internal_ip_disclosure"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "Cross Site Script Inclusion (XSSI)",
+  "priority": null,
+  "id": "xssi"
+ },
+ {
+  "parent": "Sensitive Data Exposure",
+  "name": "JSON Hijacking",
+  "priority": 5,
+  "id": "json_hijacking"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Stored - Non-Privileged User to Anyone",
+  "priority": 2,
+  "id": "non_admin_to_anyone"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Stored - Privileged User to Privilege Elevation",
+  "priority": 3,
+  "id": "privileged_user_to_privilege_elevation"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Stored - Privileged User to No Privilege Elevation",
+  "priority": 4,
+  "id": "privileged_user_to_no_privilege_elevation"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Stored - CSRF/URL-Based",
+  "priority": 3,
+  "id": "url_based"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Stored - Self",
+  "priority": 5,
+  "id": "self"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Reflected - Non-Self",
+  "priority": 3,
+  "id": "non_self"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Reflected - Self",
+  "priority": 5,
+  "id": "self"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Flash-Based",
+  "priority": 4,
+  "id": "flash_based"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Cookie-Based",
+  "priority": 5,
+  "id": "cookie_based"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "IE-Only - IE11",
+  "priority": 4,
+  "id": "ie_eleven"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "IE-Only - XSS Filter Disabled",
+  "priority": 5,
+  "id": "xss_filter_disabled"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "IE-Only - Older Version (< IE11)",
+  "priority": 5,
+  "id": "older_version_ie_eleven"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Referer",
+  "priority": 4,
+  "id": "referer"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "TRACE Method",
+  "priority": 5,
+  "id": "trace_method"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Universal (UXSS)",
+  "priority": 4,
+  "id": "universal_uxss"
+ },
+ {
+  "parent": "Cross-Site Scripting (XSS)",
+  "name": "Off-Domain - Data URI",
+  "priority": 4,
+  "id": "data_uri"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Insecure Direct Object References (IDOR)",
+  "priority": null,
+  "id": "idor"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Server-Side Request Forgery (SSRF) - Internal High Impact",
+  "priority": 2,
+  "id": "internal_high_impact"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Server-Side Request Forgery (SSRF) - Internal Scan and/or Medium Impact",
+  "priority": 3,
+  "id": "internal_scan_and_or_medium_impact"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Server-Side Request Forgery (SSRF) - External",
+  "priority": 4,
+  "id": "external"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Server-Side Request Forgery (SSRF) - DNS Query Only",
+  "priority": 5,
+  "id": "dns_query_only"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Username/Email Enumeration - Non-Brute Force",
+  "priority": 4,
+  "id": "non_brute_force"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Exposed Sensitive Android Intent",
+  "priority": null,
+  "id": "exposed_sensitive_android_intent"
+ },
+ {
+  "parent": "Broken Access Control (BAC)",
+  "name": "Exposed Sensitive iOS URL Scheme",
+  "priority": null,
+  "id": "exposed_sensitive_ios_url_scheme"
+ },
+ {
+  "parent": "Cross-Site Request Forgery (CSRF)",
+  "name": "Application-Wide",
+  "priority": 2,
+  "id": "application_wide"
+ },
+ {
+  "parent": "Cross-Site Request Forgery (CSRF)",
+  "name": "Action-Specific - Authenticated Action",
+  "priority": null,
+  "id": "authenticated_action"
+ },
+ {
+  "parent": "Cross-Site Request Forgery (CSRF)",
+  "name": "Action-Specific - Unauthenticated Action",
+  "priority": null,
+  "id": "unauthenticated_action"
+ },
+ {
+  "parent": "Cross-Site Request Forgery (CSRF)",
+  "name": "Action-Specific - Logout",
+  "priority": 5,
+  "id": "logout"
+ },
+ {
+  "parent": "Cross-Site Request Forgery (CSRF)",
+  "name": "CSRF Token Not Unique Per Request",
+  "priority": 5,
+  "id": "csrf_token_not_unique_per_request"
+ },
+ {
+  "parent": "Application-Level Denial-of-Service (DoS)",
+  "name": "Critical Impact and/or Easy Difficulty",
+  "priority": 2,
+  "id": "critical_impact_and_or_easy_difficulty"
+ },
+ {
+  "parent": "Application-Level Denial-of-Service (DoS)",
+  "name": "High Impact and/or Medium Difficulty",
+  "priority": 3,
+  "id": "high_impact_and_or_medium_difficulty"
+ },
+ {
+  "parent": "Application-Level Denial-of-Service (DoS)",
+  "name": "App Crash - Malformed Android Intents",
+  "priority": 5,
+  "id": "malformed_android_intents"
+ },
+ {
+  "parent": "Application-Level Denial-of-Service (DoS)",
+  "name": "App Crash - Malformed iOS URL Schemes",
+  "priority": 5,
+  "id": "malformed_ios_url_schemes"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Open Redirect - GET-Based",
+  "priority": 4,
+  "id": "get_based"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Open Redirect - POST-Based",
+  "priority": 5,
+  "id": "post_based"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Open Redirect - Header-Based",
+  "priority": 5,
+  "id": "header_based"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Open Redirect - Flash-Based",
+  "priority": 5,
+  "id": "flash_based"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Tabnabbing",
+  "priority": 5,
+  "id": "tabnabbing"
+ },
+ {
+  "parent": "Unvalidated Redirects and Forwards",
+  "name": "Lack of Security Speed Bump Page",
+  "priority": 5,
+  "id": "lack_of_security_speed_bump_page"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Browser Feature - Plaintext Password Field",
+  "priority": 5,
+  "id": "plaintext_password_field"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Browser Feature - Save Password",
+  "priority": 5,
+  "id": "save_password"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Browser Feature - Autocomplete Enabled",
+  "priority": 5,
+  "id": "autocomplete_enabled"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Browser Feature - Autocorrect Enabled",
+  "priority": 5,
+  "id": "autocorrect_enabled"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Browser Feature - Aggressive Offline Caching",
+  "priority": 5,
+  "id": "aggressive_offline_caching"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "CSV Injection",
+  "priority": 5,
+  "id": "csv_injection"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "Captcha Bypass - Crowdsourcing",
+  "priority": 5,
+  "id": "crowdsourcing"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "System Clipboard Leak - Shared Links",
+  "priority": 5,
+  "id": "shared_links"
+ },
+ {
+  "parent": "External Behavior",
+  "name": "User Password Persisted in Memory",
+  "priority": 5,
+  "id": "user_password_persisted_in_memory"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Policy",
+  "priority": 5,
+  "id": "weak_password_policy"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "No Password Policy",
+  "priority": 4,
+  "id": "no_password_policy"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token is Not Invalidated After Use",
+  "priority": 4,
+  "id": "token_is_not_invalidated_after_use"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token is Not Invalidated After Email Change",
+  "priority": 5,
+  "id": "token_is_not_invalidated_after_email_change"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token is Not Invalidated After Password Change",
+  "priority": 5,
+  "id": "token_is_not_invalidated_after_password_change"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token Has Long Timed Expiry",
+  "priority": 5,
+  "id": "token_has_long_timed_expiry"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token is Not Invalidated After New Token is Requested",
+  "priority": 5,
+  "id": "token_is_not_invalidated_after_new_token_is_requested"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Password Reset Implementation - Token is Not Invalidated After Login",
+  "priority": 5,
+  "id": "token_is_not_invalidated_after_login"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Lack of Verification Email",
+  "priority": 5,
+  "id": "lack_of_verification_email"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Lack of Notification Email",
+  "priority": 5,
+  "id": "lack_of_notification_email"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak Registration Implementation - Allows Disposable Email Addresses",
+  "priority": 5,
+  "id": "allows_disposable_email_addresses"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak 2FA Implementation - 2FA Secret Cannot be Rotated",
+  "priority": 4,
+  "id": "two_fa_secret_cannot_be_rotated"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak 2FA Implementation - 2FA Secret Remains Obtainable After 2FA is Enabled",
+  "priority": 4,
+  "id": "two_fa_secret_remains_obtainable_after_two_fa_is_enabled"
+ },
+ {
+  "parent": "Insufficient Security Configurability",
+  "name": "Weak 2FA Implementation - Missing Failsafe",
+  "priority": 5,
+  "id": "missing_failsafe"
+ },
+ {
+  "parent": "Using Components with Known Vulnerabilities",
+  "name": "Rosetta Flash",
+  "priority": 4,
+  "id": "rosetta_flash"
+ },
+ {
+  "parent": "Using Components with Known Vulnerabilities",
+  "name": "Outdated Software Version",
+  "priority": 5,
+  "id": "outdated_software_version"
+ },
+ {
+  "parent": "Using Components with Known Vulnerabilities",
+  "name": "Captcha Bypass - OCR (Optical Character Recognition)",
+  "priority": 5,
+  "id": "ocr_optical_character_recognition"
+ },
+ {
+  "parent": "Insecure Data Storage",
+  "name": "Sensitive Application Data Stored Unencrypted - On External Storage",
+  "priority": 4,
+  "id": "on_external_storage"
+ },
+ {
+  "parent": "Insecure Data Storage",
+  "name": "Sensitive Application Data Stored Unencrypted - On Internal Storage",
+  "priority": 5,
+  "id": "on_internal_storage"
+ },
+ {
+  "parent": "Insecure Data Storage",
+  "name": "Server-Side Credentials Storage - Plaintext",
+  "priority": 4,
+  "id": "plaintext"
+ },
+ {
+  "parent": "Insecure Data Storage",
+  "name": "Non-Sensitive Application Data Stored Unencrypted",
+  "priority": 5,
+  "id": "non_sensitive_application_data_stored_unencrypted"
+ },
+ {
+  "parent": "Insecure Data Storage",
+  "name": "Screen Caching Enabled",
+  "priority": 5,
+  "id": "screen_caching_enabled"
+ },
+ {
+  "parent": "Lack of Binary Hardening",
+  "name": "Lack of Exploit Mitigations",
+  "priority": 5,
+  "id": "lack_of_exploit_mitigations"
+ },
+ {
+  "parent": "Lack of Binary Hardening",
+  "name": "Lack of Jailbreak Detection",
+  "priority": 5,
+  "id": "lack_of_jailbreak_detection"
+ },
+ {
+  "parent": "Lack of Binary Hardening",
+  "name": "Lack of Obfuscation",
+  "priority": 5,
+  "id": "lack_of_obfuscation"
+ },
+ {
+  "parent": "Lack of Binary Hardening",
+  "name": "Runtime Instrumentation-Based",
+  "priority": 5,
+  "id": "runtime_instrumentation_based"
+ },
+ {
+  "parent": "Insecure Data Transport",
+  "name": "Cleartext Transmission of Sensitive Data",
+  "priority": null,
+  "id": "cleartext_transmission_of_sensitive_data"
+ },
+ {
+  "parent": "Insecure Data Transport",
+  "name": "Executable Download - No Secure Integrity Check",
+  "priority": 4,
+  "id": "no_secure_integrity_check"
+ },
+ {
+  "parent": "Insecure Data Transport",
+  "name": "Executable Download - Secure Integrity Check",
+  "priority": 5,
+  "id": "secure_integrity_check"
+ },
+ {
+  "parent": "Insecure OS/Firmware",
+  "name": "Command Injection",
+  "priority": 1,
+  "id": "command_injection"
+ },
+ {
+  "parent": "Insecure OS/Firmware",
+  "name": "Hardcoded Password - Privileged User",
+  "priority": 1,
+  "id": "privileged_user"
+ },
+ {
+  "parent": "Insecure OS/Firmware",
+  "name": "Hardcoded Password - Non-Privileged User",
+  "priority": 2,
+  "id": "non_privileged_user"
+ },
+ {
+  "parent": "Broken Cryptography",
+  "name": "Cryptographic Flaw - Incorrect Usage",
+  "priority": 1,
+  "id": "incorrect_usage"
+ },
+ {
+  "parent": "Privacy Concerns",
+  "name": "Unnecessary Data Collection - WiFi SSID+Password",
+  "priority": 4,
+  "id": "wifi_ssid_password"
+ },
+ {
+  "parent": "Network Security Misconfiguration",
+  "name": "Telnet Enabled",
+  "priority": 5,
+  "id": "telnet_enabled"
+ },
+ {
+  "parent": "Mobile Security Misconfiguration",
+  "name": "SSL Certificate Pinning - Absent",
+  "priority": 5,
+  "id": "absent"
+ },
+ {
+  "parent": "Mobile Security Misconfiguration",
+  "name": "SSL Certificate Pinning - Defeatable",
+  "priority": 5,
+  "id": "defeatable"
+ },
+ {
+  "parent": "Mobile Security Misconfiguration",
+  "name": "Tapjacking",
+  "priority": 5,
+  "id": "tapjacking"
+ },
+ {
+  "parent": "Mobile Security Misconfiguration",
+  "name": "Clipboard Enabled - On Sensitive Content",
+  "priority": 4,
+  "id": "on_sensitive_content"
+ },
+ {
+  "parent": "Mobile Security Misconfiguration",
+  "name": "Clipboard Enabled - On Non-Sensitive Content",
+  "priority": 5,
+  "id": "on_non_sensitive_content"
+ },
+ {
+  "parent": "Client-Side Injection",
+  "name": "Binary Planting - Default Folder Privilege Escalation",
+  "priority": 3,
+  "id": "privilege_escalation"
+ },
+ {
+  "parent": "Client-Side Injection",
+  "name": "Binary Planting - Non-Default Folder Privilege Escalation",
+  "priority": 5,
+  "id": "non_default_folder_privilege_escalation"
+ },
+ {
+  "parent": "Client-Side Injection",
+  "name": "Binary Planting - No Privilege Escalation",
+  "priority": 5,
+  "id": "no_privilege_escalation"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - PII Leakage",
+  "priority": 1,
+  "id": "pii_leakage"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Code Execution (CAN Bus Pivot)",
+  "priority": 2,
+  "id": "code_execution_can_bus_pivot"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Code Execution (No CAN Bus Pivot)",
+  "priority": 3,
+  "id": "code_execution_no_can_bus_pivot"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Unauthorized Access to Services (API / Endpoints)",
+  "priority": 3,
+  "id": "unauthorized_access_to_services"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Source Code Dump",
+  "priority": 4,
+  "id": "source_code_dump"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Denial of Service (DoS / Brick)",
+  "priority": 4,
+  "id": "dos_brick"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "Infotainment - Default Credentials",
+  "priority": 4,
+  "id": "default_credentials"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Key Fob Cloning",
+  "priority": 1,
+  "id": "key_fob_cloning"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - CAN Injection / Interaction",
+  "priority": 2,
+  "id": "can_injection_interaction"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Data Leakage / Pull Encryption Mechanism",
+  "priority": 3,
+  "id": "data_leakage_pull_encryption_mechanism"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Unauthorized Access / Turn On",
+  "priority": 4,
+  "id": "unauthorized_access_turn_on"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Roll Jam",
+  "priority": 5,
+  "id": "roll_jam"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Replay",
+  "priority": 5,
+  "id": "replay"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "RF Hub - Relay",
+  "priority": 5,
+  "id": "relay"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "CAN - Injection (Disallowed Messages)",
+  "priority": 4,
+  "id": "injection_disallowed_messages"
+ },
+ {
+  "parent": "Automotive Security Misconfiguration",
+  "name": "CAN - Injection (DoS)",
+  "priority": 4,
+  "id": "injection_dos"
+ }
+]
