@@ -4,7 +4,7 @@
 | :---: | :---: |
 | ![bbsa demo](demo.gif) | ![bbsa-mcp demo](claude-demo.gif) |
 
-Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query programs, reports, invoices, the leaderboard, and notifications from your terminal or your agent. Report submission stays strictly manual.
+CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query programs, reports, invoices, the leaderboard, and notifications, and draft and submit reports, from your terminal or your agent.
 
 - **CLI:** `bbsa`
 - **MCP server:** `bbsa-mcp`
@@ -13,8 +13,11 @@ Read-only CLI + MCP server for [bugbounty.sa](https://bugbounty.sa) — query pr
 ## Features
 
 - **`bbsa` CLI** — agent- and human-friendly: stable `--json` on every command, ANSI color only on a TTY, tab-separated plain output when piped, errors on stderr, exit codes `0`/`1`/`2`/`3`.
-- **MCP server** — 14 read-only tools + a `bugbounty://me/profile` resource for Claude, OpenCode, Gemini, etc.
-- **Read-only by construction** — every request is `GET`. No mutations exist anywhere in the codebase.
+- **MCP server** — 16 tools + a `bugbounty://me/profile` resource for Claude, OpenCode, Gemini, etc.
+- **Draft locally, push deliberately** — `bbsa reports draft` saves a reviewable Markdown file; `bbsa reports push` is the only thing that sends. Drafts appear in `reports list` tagged `draft` alongside your live reports.
+- **Pushing is off by default** — `bbsa reports push` refuses to send unless `BBSA_ALLOW_PUSH=1` is set, so an accidental push fails instead of filing an unretractable report. Drafting is never gated.
+- **Agents draft, humans decide** — the MCP server has no submit tool at all, so nothing an agent does through MCP can reach the platform.
+- **Markdown in, rich text out** — bugbounty.sa's report fields are rich text, not Markdown, so bbsa converts to the HTML the platform actually stores.
 - **One HTTP layer** — the CLI and the MCP server share a single `api.py`; no duplicated request handling, no drift.
 
 ## Install
@@ -122,6 +125,9 @@ bbsa programs show <ID>        scope, policy, reward ranges, domains
 bbsa reports list              your reports
 bbsa reports show <ID-or-slug> one report's detail
 bbsa reports stats [--group]   counts by status|severity|type
+bbsa reports types [--search]  vulnerability types accepted by --type
+bbsa reports draft <file.md>   save a report locally for review (sends nothing)
+bbsa reports push <draft-id>   submit a reviewed draft (the only send)
 bbsa finance invoices          your invoices
 bbsa finance stats             invoice totals (paid / unpaid)
 bbsa leaderboard               top 10 researchers (public)
@@ -148,7 +154,64 @@ bbsa reports list --json | jq -c '.data[] | select(.severity == "high")'
 bbsa programs show 1475 --json | jq .data.domains
 ```
 
-Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `--debug` prints full tracebacks; `--no-color` forces plain output for scripting.
+Exit codes: `0` ok, `1` error, `2` usage, `3` not found. `reports list` still prints your local drafts when bugbounty.sa is unreachable, but exits `1` and puts the failure in `meta.remote_error` — a failed fetch never reads as an empty account. `--debug` prints full tracebacks; `--no-color` forces plain output for scripting.
+
+### Drafting and submitting a report
+
+Submission is two steps on purpose. **A submitted report cannot be edited or withdrawn** — the platform gates `editReport` to admins and triagers, not researchers — so the draft is your only chance to catch a mistake.
+
+Write the report as one Markdown file. The `# ` heading is the title; the body comes from four `## ` sections — the same layout `bbsa reports show` prints, so an existing report round-trips.
+
+```markdown
+# Reflected XSS in the search endpoint
+
+## Summary
+The `q` parameter is reflected **without encoding**.
+
+## Proof of Concept
+1. Log in as any user.
+2. Request `/api/v1/users?q=<svg/onload=alert(1)>`.
+
+## Impact
+Session theft and actions performed as the victim.
+
+## Remediation
+- Context-encode `q` on output.
+```
+
+```bash
+bbsa reports types --search xss     # exact --type values live here
+
+bbsa reports draft --program 1475 \
+  --domain https://example.com --endpoint /api/v1/users \
+  --type 'Reflected - Non-Self' --parameter q report.md
+# → Draft d1 saved — nothing has been sent.
+
+bbsa reports show d1                # review it; reports whether it is ready to push
+bbsa reports push d1 --dry-run      # the exact payload, still nothing sent
+
+BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree   # this one sends
+```
+
+**Pushing fails closed.** `bbsa reports push` sends nothing unless `BBSA_ALLOW_PUSH=1` is in the environment; without it you get `push_disabled` and the draft is untouched. Pass it inline on the one command you mean to submit rather than exporting it in your shell profile — the point is that submitting is a deliberate act, since it cannot be undone. Drafting, reviewing and `--dry-run` all work without it.
+
+This is a safety catch, not a security boundary: anything that can run the CLI can also set the variable. What it buys you is that no single stray command files a report, and a real submission is greppable in your shell history.
+
+Drafts are plain Markdown files with `key: value` frontmatter, in `$XDG_DATA_HOME/bbsa/drafts` (override with `BBSA_DRAFT_DIR`). Reviewing a draft is opening it in your editor; editing one needs no command. They show up in `bbsa reports list` tagged `draft`, and `reports list` still works when the API is unreachable so long as you have local drafts.
+
+`--agree` is required and stands for the three terms the web form makes you tick — `push --dry-run` prints them. bbsa will not tick them for you. On a successful push the draft moves to `drafts/pushed/` with the live slug recorded rather than being deleted; draft ids are never reused, so an archived report is never overwritten.
+
+**Why Markdown is converted:** bugbounty.sa edits reports in a Quill rich-text editor and stores HTML, so a raw Markdown body renders as literal `**asterisks**` on the platform. bbsa converts to the exact tag set that editor's toolbar produces — `h3`/`h4` (every Markdown heading level folds into those two), `strong`, `em`, `s`, `code`, fenced code blocks, blockquotes, ordered and bullet lists, and links — so a pushed report stays editable in the web UI. Nested lists flatten to one level, horizontal rules are dropped, and attachments are not supported yet; add files through the web UI.
+
+Validation happens locally before anything is sent: `--domain` needs a scheme (`https://example.com`) or a bare IPv4, `--endpoint` must be a path, `--parameter` is `[A-Za-z0-9_-]` only, `--type` must match `bbsa reports types` exactly (near misses get suggestions), and each rendered section must stay under the platform's 5000-character limit.
+
+### Testing the send path without sending
+
+`BBSA_API_URL` repoints the client at a local mock server, so the real HTTP request can be exercised without touching bugbounty.sa — that is what `tests/test_submit_wire.py` does, asserting the exact method, path, headers and JSON body. Only ever point it at a host you control: the bearer token goes wherever it resolves.
+
+```bash
+PYTHONPATH=tests python -m unittest test_drafts test_submit test_submit_wire
+```
 
 ### MCP server
 
@@ -179,7 +242,7 @@ Or run directly without installing:
 }
 ```
 
-Tools: `list_programs`, `get_program_scope`, `list_reports`, `get_report`, `get_report_stats`, `get_wallet_balance`, `list_invoices`, `get_invoice_stats`, `list_transactions`, `get_transaction_stats`, `get_public_leaderboard`, `list_companies`, `get_company`, `list_notifications`. Resource: `bugbounty://me/profile` (`GET /me`).
+Tools: `list_programs`, `get_program_scope`, `list_reports`, `get_report`, `get_report_stats`, `list_vulnerability_types`, `list_submission_agreements`, `list_drafts`, `draft_report`, `get_wallet_balance`, `list_invoices`, `get_invoice_stats`, `list_transactions`, `get_transaction_stats`, `get_public_leaderboard`, `list_companies`, `get_company`, `list_notifications`. Resource: `bugbounty://me/profile` (`GET /me`).
 
 ## Example
 
@@ -194,9 +257,14 @@ Agent prompts that work with the MCP server connected to your client (the agent 
 3. **Market-scan as a researcher**
    > "Write a short briefing: who's leading the researcher leaderboard, which recent notifications or new programs are relevant to me, and how my profile compares."
 
+4. **Draft a finding for review**
+   > "Here are my notes on an IDOR in CoderHub's /api/v1/users endpoint. Check it's in scope, pick the right vulnerability type, and save it as a draft for me to review."
+
+   The agent writes the draft and stops — `draft_report` is the only writing tool it has, and it writes to your disk, not to bugbounty.sa. You review with `bbsa reports show d1`, then either push it yourself or tell the agent to. The shipped skill instructs agents to always draft first, never push unless you ask, and never persist `BBSA_ALLOW_PUSH`.
+
 ## Contributing
 
-Issues and PRs welcome at [github.com/ShulkwiSEC/bugbounty.sa/issues](https://github.com/ShulkwiSEC/bugbounty.sa/issues). Keep it read-only: no write endpoints, no new dependencies without a good reason.
+Issues and PRs welcome at [github.com/ShulkwiSEC/bugbounty.sa/issues](https://github.com/ShulkwiSEC/bugbounty.sa/issues). Keep `bbsa reports push` the only code path that submits, and keep it out of the MCP server — no new dependencies without a good reason.
 
 ## License
 
