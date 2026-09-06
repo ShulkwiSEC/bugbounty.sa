@@ -1,10 +1,14 @@
 import io
+import json
+import os
+import tempfile
 from argparse import Namespace
 from contextlib import redirect_stdout
 from unittest import TestCase
 from unittest.mock import patch
 
-from bbsa.cli.commands.reports import _markdown, cmd_reports_show
+from bbsa import api, drafts
+from bbsa.cli.commands.reports import _markdown, cmd_reports_list, cmd_reports_show
 
 
 class ReportsTest(TestCase):
@@ -33,3 +37,43 @@ class ReportsTest(TestCase):
             _markdown("<p>&lt;script&gt;safe&lt;/script&gt;</p>"),
             r"\<script\>safe\</script\>",
         )
+
+
+class ReportsListTest(TestCase):
+    """A failed remote fetch must never read as an empty account."""
+
+    def setUp(self):
+        env = patch.dict(os.environ, {"BBSA_DRAFT_DIR": tempfile.mkdtemp()})
+        env.start()
+        self.addCleanup(env.stop)
+        drafts.save({"program": "1475"}, "# Local finding\n\n## Summary\nx")
+
+    def _list(self, as_json):
+        out = io.StringIO()
+        with (
+            patch(
+                "bbsa.cli.commands.reports.api.get",
+                side_effect=api.ApiError("boom", code="unauthenticated", retryable=True),
+            ),
+            redirect_stdout(out),
+        ):
+            return cmd_reports_list(Namespace(limit=25, json=as_json)), out.getvalue()
+
+    def test_json_reports_the_remote_failure_and_exits_nonzero(self):
+        code, out = self._list(as_json=True)
+        payload = json.loads(out)
+        self.assertEqual(code, 1)
+        self.assertEqual(payload["meta"]["drafts"], 1)
+        self.assertEqual(payload["meta"]["remote_error"]["code"], "unauthenticated")
+
+    def test_human_output_still_shows_drafts_but_exits_nonzero(self):
+        code, out = self._list(as_json=False)
+        self.assertEqual(code, 1)
+        self.assertIn("Local finding", out)
+        self.assertIn("draft", out)
+
+    def test_failure_with_no_drafts_is_just_an_error(self):
+        for path in drafts.draft_dir().glob("*.md"):
+            path.unlink()
+        with self.assertRaises(api.ApiError):
+            self._list(as_json=True)

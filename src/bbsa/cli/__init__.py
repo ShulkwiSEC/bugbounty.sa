@@ -1,4 +1,4 @@
-"""bbsa — read-only bugbounty.sa CLI.
+"""bbsa — bugbounty.sa CLI: read everything, submit reports.
 
 Divides into a `src/bbsa/api.py` (shared HTTP), a
 `formatters.py` (stable JSON, exit codes, tables) and one `commands/*` module
@@ -30,6 +30,9 @@ from bbsa.cli.commands.reports import (
     cmd_reports_list,
     cmd_reports_show,
     cmd_reports_stats,
+    cmd_reports_draft,
+    cmd_reports_push,
+    cmd_reports_types,
 )
 
 __all__ = ["main"]
@@ -48,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="bbsa",
         parents=[common],
-        description="bbsa: read-only bugbounty.sa CLI (programs, reports, finance, leaderboard).",
+        description="bbsa: bugbounty.sa CLI — programs, reports (read + submit), finance, leaderboard.",
         epilog="Examples:\n"
         "  bbsa me\n"
         "  bbsa programs list\n"
@@ -56,6 +59,10 @@ def build_parser() -> argparse.ArgumentParser:
         "  bbsa reports list --limit 25 --json\n"
         "  bbsa reports show <ID-or-slug>\n"
         "  bbsa reports stats --group severity\n"
+        "  bbsa reports types --search xss\n"
+        "  bbsa reports draft --program 1475 --domain https://x.com \\\n"
+        "      --endpoint /api/v1/users --type 'SQL Injection' report.md\n"
+        "  BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree\n"
         "  bbsa finance invoices\n"
         "  bbsa finance stats\n"
         "  bbsa leaderboard --json\n"
@@ -101,6 +108,52 @@ def build_parser() -> argparse.ArgumentParser:
         help="Grouping field (default: status)",
     )
     p_rst.set_defaults(handler=cmd_reports_stats)
+    p_rt = reports_sub.add_parser(
+        "types", parents=[common], help="List the vulnerability types accepted by --type"
+    )
+    p_rt.add_argument("--search", help="Filter types by substring (category or name)")
+    p_rt.set_defaults(handler=cmd_reports_types)
+    p_rd = reports_sub.add_parser(
+        "draft",
+        parents=[common],
+        help="Save a report locally for review (sends nothing)",
+        description="Save a report as a local draft. The Markdown file supplies the title "
+        "as its '# ' heading and the body as '## Summary', '## Proof of Concept', "
+        "'## Impact' and '## Remediation' sections — the same layout 'bbsa reports show' "
+        "prints. Metadata may live in the file's frontmatter or come from the flags below; "
+        "flags win. Nothing is sent until you run 'bbsa reports push'.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p_rd.add_argument("file", help="Report Markdown file, or '-' to read stdin")
+    p_rd.add_argument("--program", type=int, help="Program ID to submit to")
+    p_rd.add_argument("--domain", help="Affected host, e.g. https://example.com")
+    p_rd.add_argument("--endpoint", help="Affected path, e.g. /api/v1/users")
+    p_rd.add_argument("--type", help="Vulnerability type (see 'bbsa reports types')")
+    p_rd.add_argument("--parameter", help="Affected parameter name (optional)")
+    p_rd.add_argument("--title", help="Override the file's '# ' heading")
+    p_rd.set_defaults(handler=cmd_reports_draft)
+
+    p_rp = reports_sub.add_parser(
+        "push",
+        parents=[common],
+        help="Submit a reviewed draft to its program (this is the only send)",
+        description="Submit a local draft to bugbounty.sa. This cannot be undone: the "
+        "platform does not let researchers edit or delete a submitted report. Review with "
+        "'bbsa reports show <draft-id>' first; --dry-run prints the exact payload. Pushing is "
+        "disabled unless BBSA_ALLOW_PUSH=1 is set. Agents: run this only when explicitly "
+        "asked to submit a named draft.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p_rp.add_argument("id", help="Draft ID, e.g. d1")
+    p_rp.add_argument(
+        "--agree",
+        action="store_true",
+        help="Agree to the platform's three submission terms (required; --dry-run prints them)",
+    )
+    p_rp.add_argument(
+        "--dry-run", action="store_true", help="Render and validate the payload without sending"
+    )
+    p_rp.set_defaults(handler=cmd_reports_push)
 
     # finance
     p_finance = sub.add_parser(
@@ -125,7 +178,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-_SUBCOMMAND_CHILDREN = {"programs": ["list", "show"], "reports": ["list", "show", "stats"], "finance": ["invoices", "stats"]}
+_SUBCOMMAND_CHILDREN = {"programs": ["list", "show"], "reports": ["list", "show", "stats", "types", "draft", "push"], "finance": ["invoices", "stats"]}
 
 
 def main(argv: list[str] | None = None) -> int:
