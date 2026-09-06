@@ -1,7 +1,7 @@
 [project]
 name = "bugbounty.sa"
-version = "0.2.0"
-description = "bugbounty.sa(bbsa): read-only CLI + MCP server for bugbounty.sa — programs, reports, finance, leaderboard"
+version = "0.5.1"
+description = "bugbounty.sa(bbsa): CLI + MCP server for bugbounty.sa — programs, reports (read, draft, submit), finance, leaderboard"
 readme = "README.md"
 authors = [
     { name = "shulkwisec", email = "shulkwisec@gmail.com" }
