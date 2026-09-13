@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import re
 import sys
 from datetime import datetime
@@ -252,6 +253,29 @@ def _payload_from_draft(meta: dict, body: str, agreed: bool) -> dict:
     )
 
 
+def _attachment_paths(meta: dict) -> list[Path]:
+    raw = meta.get("attachments", "")
+    if not raw:
+        return []
+    try:
+        paths = json.loads(raw)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise api.ApiError(
+            "Draft 'attachments' must be a JSON list of file paths.", code="validation_error"
+        ) from exc
+    if not isinstance(paths, list) or not all(isinstance(path, str) for path in paths):
+        raise api.ApiError(
+            "Draft 'attachments' must be a JSON list of file paths.", code="validation_error"
+        )
+    files = [Path(path).expanduser() for path in paths]
+    missing = [str(path) for path in files if not path.is_file()]
+    if missing:
+        raise api.ApiError(
+            f"Attachment is not a file: {', '.join(missing)}", code="validation_error"
+        )
+    return files
+
+
 def _draft_blocker(meta: dict, body: str) -> str | None:
     """What still stands between this draft and a successful push, if anything."""
     program = str(meta.get("program", "")).strip()
@@ -260,6 +284,7 @@ def _draft_blocker(meta: dict, body: str) -> str | None:
     try:
         # A dry build only renders and validates; consent is asked for at push time.
         _payload_from_draft(meta, body, agreed=True)
+        _attachment_paths(meta)
     except api.ApiError as exc:
         return str(exc)
     return None
@@ -320,6 +345,8 @@ def cmd_reports_draft(args: argparse.Namespace) -> int:
             meta[key] = str(value)
     if args.title:
         meta["title"] = args.title
+    if getattr(args, "attach", None):
+        meta["attachments"] = json.dumps([str(Path(path).resolve()) for path in args.attach])
 
     draft_id, path = drafts.save(meta, body)
     blocker = _draft_blocker(meta, body)
@@ -350,19 +377,34 @@ def cmd_reports_push(args: argparse.Namespace) -> int:
             code="validation_error",
         )
     payload = _payload_from_draft(meta, body, agreed=args.agree or args.dry_run)
+    attachment_paths = _attachment_paths(meta)
 
     if args.dry_run:
         if args.json:
-            print_json_success(payload, meta={"program_id": int(program), "submitted": False})
+            print_json_success(
+                {**payload, "attachment_paths": [str(path) for path in attachment_paths]},
+                meta={"program_id": int(program), "submitted": False},
+            )
         else:
             print(bold(f"══ Dry run — nothing sent to program {program} ══\n"))
             print(render_kv([(k, text(v, 100)) for k, v in payload.items() if v]))
+            if attachment_paths:
+                print(render_kv([("Attachments", ", ".join(map(str, attachment_paths)))]))
             print(f"\n{bold('Pushing means agreeing to:')}")
             for agreement in submit.AGREEMENTS:
                 print(f"  • {agreement}")
             prefix = "" if submit.push_enabled() else f"{submit.PUSH_ENV}=1 "
             suggest_next_step(f"{prefix}bbsa reports push {args.id} --agree")
         return EXIT_OK
+
+    if not submit.push_enabled():
+        submit.submit_report(int(program), payload)  # raises before any upload
+    uploaded = [api.upload(path).get("data") for path in attachment_paths]
+    payload["attachments"] = [
+        item.get("id") if isinstance(item, dict) else item for item in uploaded
+    ]
+    if any(item in (None, "") for item in payload["attachments"]):
+        raise api.ApiError("Attachment upload returned no ID.", code="http_error")
 
     report = submit.submit_report(int(program), payload).get("data") or {}
 

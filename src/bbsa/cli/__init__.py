@@ -131,6 +131,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_rd.add_argument("--type", help="Vulnerability type (see 'bbsa reports types')")
     p_rd.add_argument("--parameter", help="Affected parameter name (optional)")
     p_rd.add_argument("--title", help="Override the file's '# ' heading")
+    p_rd.add_argument(
+        "--attach", action="append", default=[], metavar="PATH",
+        help="Attach a PoC or evidence file at push time (repeatable)",
+    )
     p_rd.set_defaults(handler=cmd_reports_draft)
 
     p_rp = reports_sub.add_parser(

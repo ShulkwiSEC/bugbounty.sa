@@ -14,6 +14,9 @@ with `submit.py`, and the draft store with `drafts.py`.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from mcp.server.mcpserver import MCPServer
 
 from bbsa import drafts as _drafts
@@ -99,6 +102,7 @@ def draft_report(
     impact: str,
     remediation: str,
     parameter: str = "",
+    attachment_paths: list[str] | None = None,
 ) -> dict:
     """Save a report as a LOCAL DRAFT for the user to review. Sends nothing.
 
@@ -111,7 +115,8 @@ def draft_report(
     `summary`, `poc`, `impact` and `remediation` are Markdown; they are converted
     to the platform's rich text at push time. `domain` is a full host like
     https://example.com, `endpoint` a path like /api/v1/users, and `type` an exact
-    name from `list_vulnerability_types`.
+    name from `list_vulnerability_types`. `attachment_paths` records local PoC
+    and evidence files for upload during the later operator-gated CLI push.
     """
     # Validate now so the user reviews a draft that will actually push.
     _submit.build_payload(
@@ -146,6 +151,12 @@ def draft_report(
         "type": _submit.resolve_type(type),
         "parameter": parameter,
     }
+    if attachment_paths:
+        files = [Path(path).expanduser().resolve() for path in attachment_paths]
+        missing = [str(path) for path in files if not path.is_file()]
+        if missing:
+            raise ValueError(f"Attachment is not a file: {', '.join(missing)}")
+        meta["attachments"] = json.dumps([str(path) for path in files])
     draft_id, path = _drafts.save(meta, body)
     return {
         "data": {"id": draft_id, "path": str(path), "status": "draft"},

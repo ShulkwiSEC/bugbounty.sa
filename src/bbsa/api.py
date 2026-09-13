@@ -6,7 +6,9 @@ Reads are GET; the one write is POST /programs/{id}/reports (report submission).
 from __future__ import annotations
 
 import logging
+import mimetypes
 import os
+from pathlib import Path
 
 import httpx
 
@@ -115,6 +117,38 @@ def get(path: str, params: dict | None = None) -> dict:
 
 def post(path: str, payload: dict) -> dict:
     return _request("POST", path, json=payload)
+
+
+def upload(path: str | Path, type: str = "bug_reports") -> dict:
+    """Upload one report attachment and return the API envelope."""
+    file = Path(path).expanduser()
+    if not file.is_file():
+        raise ApiError(f"Attachment is not a file: {file}", code="validation_error")
+    token = os.environ.get("BUGBOUNTY_SA_TOKEN", "")
+    headers = {k: v for k, v in HEADERS.items() if k.lower() != "content-type"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    try:
+        with file.open("rb") as stream:
+            response = httpx.post(
+                f"{_base_url()}/uploads",
+                data={"type": type},
+                files={"file": (file.name, stream, mimetypes.guess_type(file.name)[0])},
+                headers=headers,
+                timeout=30,
+            )
+    except httpx.HTTPError as exc:
+        raise ApiError(
+            f"Upload of {file} failed: {exc}", code="network_error", retryable=True
+        ) from exc
+    if response.status_code < 400:
+        return response.json()
+    raise ApiError(
+        _err_text(response) or f"Upload of {file} failed.",
+        code="validation_error" if response.status_code == 422 else "http_error",
+        retryable=response.status_code >= 500,
+        status=response.status_code,
+    )
 
 
 def get_report(report_id_or_slug: str) -> dict:

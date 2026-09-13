@@ -139,6 +139,17 @@ class PushWireTest(TestCase):
         self.assertIn("4242", out)
         self.assertIn("recorded-report", out)
 
+    def test_uploads_draft_attachments_and_sends_their_ids(self):
+        attachment = self.draft_dir / "poc.py"
+        attachment.write_text("print('proof')", encoding="utf-8")
+        self.draft_args.attach = [str(attachment)]
+        with patch(
+            "bbsa.cli.commands.reports.api.upload", return_value={"data": {"id": 91}}
+        ) as upload:
+            self._run()
+        upload.assert_called_once_with(attachment)
+        self.assertEqual(_Recorder.received["json"]["attachments"], [91])
+
     def test_push_is_disabled_without_the_opt_in(self):
         self._draft()
         with patch.dict(os.environ, {"BBSA_ALLOW_PUSH": ""}):

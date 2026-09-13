@@ -107,14 +107,24 @@ bbsa reports list --json | jq -c '.data[] | select(.severity == "high")'
 bbsa reports types --search xss            # exact --type values live here
 bbsa reports draft --program 1475 \
   --domain https://example.com --endpoint /api/v1/users \
-  --type 'Reflected - Non-Self' --parameter q report.md
+  --type 'Reflected - Non-Self' --parameter q \
+  --attach poc.py --attach evidence.har report.md
 bbsa reports show d1                       # review; says whether it is ready
 BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree   # only when the user asks
 ```
 
 Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa reports list` tagged `draft`, and are archived to `drafts/pushed/` once submitted. `bbsa reports show <draft-id>` reports what still blocks a push.
 
-**bugbounty.sa does not render Markdown.** Its report fields are rich text (a Quill editor) that store HTML, so raw Markdown would show up as literal `**asterisks**`. bbsa converts for you into the tag set the platform's own toolbar produces: `h3`/`h4` headings (all Markdown heading levels fold into those two), `strong`, `em`, `s`, `code`, fenced blocks, blockquotes, ordered/bullet lists, and links. Nested lists flatten to one level, horizontal rules are dropped, and attachments are not supported — the user attaches files through the web UI.
+**bugbounty.sa does not render Markdown.** Its report fields are rich text (a Quill editor) that store HTML, so raw Markdown would show up as literal `**asterisks**`. bbsa converts for you into the tag set the platform's own toolbar produces: `h3`/`h4` headings (all Markdown heading levels fold into those two), `strong`, `em`, `s`, `code`, fenced blocks, blockquotes, ordered/bullet lists, and links. Nested lists flatten to one level and horizontal rules are dropped.
+
+Use repeatable `--attach PATH` when drafting to include the executable PoC and
+selected evidence. Drafting records and validates the local paths but uploads
+nothing. The operator-gated push uploads them first and sends their returned IDs
+with the report. Never attach credentials, unredacted PII, or unrelated files.
+
+The report submission API has no severity field. Include an evidence-backed CVSS
+vector and severity in Summary. A platform badge of `Unspecified` remains until
+the platform's triage workflow assigns it; bbsa cannot set that badge.
 
 ## Gotchas
 

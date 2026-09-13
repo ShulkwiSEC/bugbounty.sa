@@ -1,10 +1,13 @@
 """Report payload building, validation, and the push gate."""
 
 import os
+import tempfile
+from pathlib import Path
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from bbsa import api, richtext, submit
+from bbsa.cli.commands.reports import _attachment_paths
 
 REPORT_MD = """# Reflected XSS in search
 
@@ -36,6 +39,11 @@ VALID = dict(
 
 
 class SubmitTest(TestCase):
+    def test_missing_draft_attachment_is_rejected(self):
+        with self.assertRaises(api.ApiError) as caught:
+            _attachment_paths({"attachments": '["/definitely/missing/poc.py"]'})
+        self.assertEqual(caught.exception.code, "validation_error")
+
     def test_parses_title_and_sections(self):
         title, sections = submit.parse_report_markdown(REPORT_MD)
         self.assertEqual(title, "Reflected XSS in search")
@@ -92,6 +100,18 @@ class SubmitTest(TestCase):
         ):
             submit.submit_report(1475, {"title": "T"})
         post.assert_called_once_with("/programs/1475/reports", {"title": "T"})
+
+    def test_uploads_attachment_as_bug_report_multipart(self):
+        path = Path(tempfile.mkdtemp()) / "poc.py"
+        path.write_text("print('proof')", encoding="utf-8")
+        response = Mock(status_code=201)
+        response.json.return_value = {"data": {"id": 91}}
+        with patch("bbsa.api.httpx.post", return_value=response) as post:
+            self.assertEqual(api.upload(path), {"data": {"id": 91}})
+        kwargs = post.call_args.kwargs
+        self.assertEqual(kwargs["data"], {"type": "bug_reports"})
+        self.assertEqual(kwargs["files"]["file"][0], "poc.py")
+        self.assertNotIn("Content-Type", kwargs["headers"])
 
     def test_submission_is_off_unless_explicitly_enabled(self):
         for value in ("", "0", "no", "false", "maybe"):

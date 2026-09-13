@@ -81,8 +81,9 @@ before assuming they still hold.
 - `recaptchaToken` is attached to every write by the web app. We send `null`,
   which is what the browser sends without grecaptcha. **Unverified against a real
   submission** — if pushes start failing, suspect this first.
-- Attachments upload via `POST /uploads` (multipart `file` + `type`), returning
-  an id that goes in `attachments`. Not implemented yet.
+- Attachments upload via `POST /uploads` (multipart `file` + `type=bug_reports`),
+  returning an id that goes in `attachments`. Draft `--attach` paths stay local;
+  files upload only during an explicitly authorized push.
 
 ## Conventions
 

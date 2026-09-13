@@ -34,7 +34,7 @@ __all__ = [
 ]
 
 # Frontmatter keys, in the order they are written back out.
-META_KEYS = ("program", "domain", "endpoint", "type", "parameter")
+META_KEYS = ("program", "domain", "endpoint", "type", "parameter", "attachments")
 
 _ID = re.compile(r"^d(\d+)$")
 _FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*\n?(.*)\Z", re.S)
