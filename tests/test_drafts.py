@@ -28,10 +28,19 @@ class DraftsTest(TestCase):
         self.assertTrue(path.read_text().startswith("---\nprogram: 1475\ndomain:"))
 
     def test_ids_do_not_collide_or_reuse(self):
-        self.assertEqual(drafts.save(META, BODY)[0], "d1")
-        self.assertEqual(drafts.save(META, BODY)[0], "d2")
+        self.assertEqual(drafts.save(META, "# One\n\n## Summary\na")[0], "d1")
+        self.assertEqual(drafts.save(META, "# Two\n\n## Summary\nb")[0], "d2")
         drafts.archive("d1")
-        self.assertEqual(drafts.save(META, BODY)[0], "d3")  # not d1 again
+        self.assertEqual(drafts.save(META, "# Three\n\n## Summary\nc")[0], "d3")  # not d1 again
+
+    def test_redrafting_same_program_and_title_folds_onto_one_id(self):
+        d1, _ = drafts.save(META, "# Same finding\n\n## Summary\nfirst pass")
+        d2, path = drafts.save(META, "# Same finding\n\n## Summary\nrevised wording")
+        self.assertEqual(d1, d2)  # folded, not duplicated
+        self.assertEqual([d[0] for d in drafts.load_all()], ["d1"])
+        self.assertIn("revised wording", path.read_text())
+        # A different title on the same program is a different draft.
+        self.assertEqual(drafts.save(META, "# Other finding\n\n## Summary\nx")[0], "d2")
 
     def test_ids_are_not_reused_after_every_draft_is_pushed(self):
         drafts.save(META, "# First\n\n## Summary\nfinding one")
@@ -43,8 +52,8 @@ class DraftsTest(TestCase):
         self.assertIn("finding one", (drafts.draft_dir() / "pushed" / "d1.md").read_text())
 
     def test_load_all_skips_pushed_drafts(self):
-        drafts.save(META, BODY)
-        drafts.save(META, BODY)
+        drafts.save(META, "# One\n\n## Summary\na")
+        drafts.save(META, "# Two\n\n## Summary\nb")
         drafts.archive("d1")
         self.assertEqual([d[0] for d in drafts.load_all()], ["d2"])
 

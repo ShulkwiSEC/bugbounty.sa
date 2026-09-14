@@ -38,6 +38,21 @@ META_KEYS = ("program", "domain", "endpoint", "type", "parameter", "attachments"
 
 _ID = re.compile(r"^d(\d+)$")
 _FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*\n?(.*)\Z", re.S)
+_TITLE = re.compile(r"(?m)^#[ \t]+(.+?)\s*$")
+
+
+def _identity(meta: dict, body: str) -> tuple[str, str] | None:
+    """A draft's (program, title) fingerprint, used to fold re-drafts of the
+    same finding onto one id instead of piling up duplicates. None when either
+    half is missing — nothing to match on, so always a fresh draft."""
+    program = str(meta.get("program", "")).strip()
+    title = str(meta.get("title", "")).strip()
+    if not title:
+        match = _TITLE.search(body)
+        title = match.group(1).strip() if match else ""
+    if not program or not title:
+        return None
+    return program, title.lower()
 
 
 def draft_dir() -> Path:
@@ -87,9 +102,22 @@ def _render(meta: dict[str, str], body: str) -> str:
 
 
 def save(meta: dict, body: str, draft_id: str | None = None) -> tuple[str, Path]:
-    """Write a draft, allocating the next free id when one is not given."""
+    """Write a draft, allocating the next free id when one is not given.
+
+    A new draft (no explicit id) that shares a pending draft's (program, title)
+    overwrites that draft rather than creating a duplicate: an agent re-drafting
+    the same finding — a retry, or a second pass with tweaked wording — lands on
+    one id. Pushed drafts live in ``pushed/`` and never match, so a re-draft of
+    an already-filed report still gets a fresh id."""
     directory = draft_dir()
     directory.mkdir(parents=True, exist_ok=True)
+    if draft_id is None:
+        fingerprint = _identity(meta, body)
+        if fingerprint:
+            draft_id = next(
+                (existing for existing, m, b, _ in load_all() if _identity(m, b) == fingerprint),
+                None,
+            )
     draft_id = draft_id or _next_id()
     path = _path(draft_id)
     path.write_text(_render({k: str(v) for k, v in meta.items()}, body), encoding="utf-8")

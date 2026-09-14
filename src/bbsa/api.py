@@ -119,8 +119,13 @@ def post(path: str, payload: dict) -> dict:
     return _request("POST", path, json=payload)
 
 
-def upload(path: str | Path, type: str = "bug_reports") -> dict:
-    """Upload one report attachment and return the API envelope."""
+def upload(path: str | Path, type: str = "reports") -> dict:
+    """Upload one report attachment and return the API envelope.
+
+    ``type`` is the ``POST /uploads`` bucket. Report attachments use ``reports``
+    (from the web app's upload-type enum); ``bug_reports`` uploads are a
+    different bucket the report form does not accept, so the later submit 422s.
+    """
     file = Path(path).expanduser()
     if not file.is_file():
         raise ApiError(f"Attachment is not a file: {file}", code="validation_error")

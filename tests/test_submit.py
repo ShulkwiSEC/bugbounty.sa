@@ -101,7 +101,7 @@ class SubmitTest(TestCase):
             submit.submit_report(1475, {"title": "T"})
         post.assert_called_once_with("/programs/1475/reports", {"title": "T"})
 
-    def test_uploads_attachment_as_bug_report_multipart(self):
+    def test_uploads_attachment_as_report_multipart(self):
         path = Path(tempfile.mkdtemp()) / "poc.py"
         path.write_text("print('proof')", encoding="utf-8")
         response = Mock(status_code=201)
@@ -109,7 +109,7 @@ class SubmitTest(TestCase):
         with patch("bbsa.api.httpx.post", return_value=response) as post:
             self.assertEqual(api.upload(path), {"data": {"id": 91}})
         kwargs = post.call_args.kwargs
-        self.assertEqual(kwargs["data"], {"type": "bug_reports"})
+        self.assertEqual(kwargs["data"], {"type": "reports"})
         self.assertEqual(kwargs["files"]["file"][0], "poc.py")
         self.assertNotIn("Content-Type", kwargs["headers"])
 

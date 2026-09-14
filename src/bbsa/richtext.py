@@ -35,22 +35,25 @@ _RULE = re.compile(r"^([-*_])\1{2,}$")
 
 
 def _inline(line: str) -> str:
-    """Inline spans. Code spans are escaped and left alone, everything else is
-    escaped first so user angle brackets never become markup."""
-    out = []
-    for i, part in enumerate(re.split(r"(`[^`]+`)", line)):
-        if i % 2:
-            out.append(f"<code>{html.escape(part[1:-1])}</code>")
-            continue
-        part = html.escape(part)
-        part = _LINK.sub(r'<a href="\2" target="_blank">\1</a>', part)
-        part = _BOLD.sub(r"<strong>\1</strong>", part)
-        part = _BOLD_ALT.sub(r"<strong>\1</strong>", part)
-        part = _STRIKE.sub(r"<s>\1</s>", part)
-        part = _ITALIC.sub(r"<em>\1</em>", part)
-        part = _ITALIC_ALT.sub(r"<em>\1</em>", part)
-        out.append(part)
-    return "".join(out)
+    """Inline spans. Code spans are pulled out first (their contents stay
+    literal), emphasis runs over the whole remaining line — so a **bold** or
+    *italic* run may span across a `code` span — then the code spans are
+    restored. Everything else is escaped so user angle brackets never markup."""
+    codes: list[str] = []
+
+    def _stash(match: re.Match) -> str:
+        codes.append(f"<code>{html.escape(match.group(1))}</code>")
+        return f"\x00{len(codes) - 1}\x00"  # placeholder survives html.escape
+
+    line = re.sub(r"`([^`]+)`", _stash, line)
+    line = html.escape(line)
+    line = _LINK.sub(r'<a href="\2" target="_blank">\1</a>', line)
+    line = _BOLD.sub(r"<strong>\1</strong>", line)
+    line = _BOLD_ALT.sub(r"<strong>\1</strong>", line)
+    line = _STRIKE.sub(r"<s>\1</s>", line)
+    line = _ITALIC.sub(r"<em>\1</em>", line)
+    line = _ITALIC_ALT.sub(r"<em>\1</em>", line)
+    return re.sub(r"\x00(\d+)\x00", lambda m: codes[int(m.group(1))], line)
 
 
 def to_html(markdown: str) -> str:
@@ -142,6 +145,9 @@ def demo() -> None:
     assert to_html("1. a\n2. b") == "<ol><li>a</li><li>b</li></ol>"
     assert to_html("> quoted") == "<blockquote>quoted</blockquote>"
     assert to_html("`<script>`") == "<p><code>&lt;script&gt;</code></p>"
+    assert to_html("**wraps `code` span**") == (
+        "<p><strong>wraps <code>code</code> span</strong></p>"
+    ), to_html("**wraps `code` span**")
     assert to_html("a <b> c") == "<p>a &lt;b&gt; c</p>", to_html("a <b> c")
     assert to_html("```\n<x>\n```") == (
         '<pre class="ql-syntax" spellcheck="false">&lt;x&gt;</pre>'
