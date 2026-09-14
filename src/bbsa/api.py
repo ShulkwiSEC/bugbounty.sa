@@ -129,6 +129,16 @@ def upload(path: str | Path, type: str = "reports") -> dict:
     file = Path(path).expanduser()
     if not file.is_file():
         raise ApiError(f"Attachment is not a file: {file}", code="validation_error")
+    mime = mimetypes.guess_type(file.name)[0]
+    if type == "reports" and mime not in ("image/jpeg", "image/png", "application/pdf"):
+        # Backstop: the platform 422s a non-image/PDF report attachment after the
+        # upload. Fail closed before sending. submit.check_attachments catches this
+        # earlier with fuller guidance; this guards direct api.upload callers.
+        raise ApiError(
+            f"Report attachment {file.name!r} is {mime or 'an unrecognised type'}; "
+            "bugbounty.sa accepts only PNG, JPEG or PDF.",
+            code="validation_error",
+        )
     token = os.environ.get("BUGBOUNTY_SA_TOKEN", "")
     headers = {k: v for k, v in HEADERS.items() if k.lower() != "content-type"}
     if token:

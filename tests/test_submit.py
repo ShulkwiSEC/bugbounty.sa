@@ -102,16 +102,37 @@ class SubmitTest(TestCase):
         post.assert_called_once_with("/programs/1475/reports", {"title": "T"})
 
     def test_uploads_attachment_as_report_multipart(self):
-        path = Path(tempfile.mkdtemp()) / "poc.py"
-        path.write_text("print('proof')", encoding="utf-8")
+        path = Path(tempfile.mkdtemp()) / "evidence.png"
+        path.write_bytes(b"\x89PNG\r\n\x1a\n")
         response = Mock(status_code=201)
         response.json.return_value = {"data": {"id": 91}}
         with patch("bbsa.api.httpx.post", return_value=response) as post:
             self.assertEqual(api.upload(path), {"data": {"id": 91}})
         kwargs = post.call_args.kwargs
         self.assertEqual(kwargs["data"], {"type": "reports"})
-        self.assertEqual(kwargs["files"]["file"][0], "poc.py")
+        self.assertEqual(kwargs["files"]["file"][0], "evidence.png")
         self.assertNotIn("Content-Type", kwargs["headers"])
+
+    def test_upload_rejects_non_image_pdf_report_attachment(self):
+        path = Path(tempfile.mkdtemp()) / "poc.py"
+        path.write_text("print('proof')", encoding="utf-8")
+        with patch("bbsa.api.httpx.post") as post:
+            with self.assertRaises(api.ApiError) as ctx:
+                api.upload(path)
+        self.assertEqual(ctx.exception.code, "validation_error")
+        post.assert_not_called()  # fail closed before sending
+
+    def test_check_attachments_allows_png_jpg_pdf_and_caps_at_five(self):
+        d = Path(tempfile.mkdtemp())
+        ok = []
+        for name in ("a.png", "b.jpg", "c.jpeg", "d.pdf"):
+            (d / name).write_bytes(b"x")
+            ok.append(d / name)
+        submit.check_attachments(ok)  # no raise
+        with self.assertRaises(api.ApiError):
+            submit.check_attachments([d / "e.txt"])
+        with self.assertRaises(api.ApiError):
+            submit.check_attachments([d / f"{i}.png" for i in range(6)])
 
     def test_submission_is_off_unless_explicitly_enabled(self):
         for value in ("", "0", "no", "false", "maybe"):

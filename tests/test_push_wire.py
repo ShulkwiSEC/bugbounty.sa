@@ -140,8 +140,8 @@ class PushWireTest(TestCase):
         self.assertIn("recorded-report", out)
 
     def test_uploads_draft_attachments_and_sends_their_ids(self):
-        attachment = self.draft_dir / "poc.py"
-        attachment.write_text("print('proof')", encoding="utf-8")
+        attachment = self.draft_dir / "evidence.png"
+        attachment.write_bytes(b"\x89PNG\r\n\x1a\n")
         self.draft_args.attach = [str(attachment)]
         with patch(
             "bbsa.cli.commands.reports.api.upload", return_value={"data": {"id": 91}}

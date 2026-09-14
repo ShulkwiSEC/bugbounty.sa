@@ -83,8 +83,12 @@ before assuming they still hold.
   submission** — if pushes start failing, suspect this first.
 - Attachments upload via `POST /uploads` (multipart `file` + `type=reports` —
   the report form's bucket; `bug_reports` is a different bucket the submit
-  rejects), returning an id that goes in `attachments`. Draft `--attach` paths stay local;
-  files upload only during an explicitly authorized push.
+  rejects), returning an id that goes in `attachments`. The endpoint accepts
+  **only `image/png`, `image/jpeg`, `application/pdf`, max 5 files** for report
+  attachments; anything else 422s *after* the upload, so `submit.check_attachments`
+  rejects it locally first. PoC scripts and text/JSON evidence go inline in the
+  body, not as attachments. Draft `--attach` paths stay local; files upload only
+  during an explicitly authorized push.
 
 ## Conventions
 

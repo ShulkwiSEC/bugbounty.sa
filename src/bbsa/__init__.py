@@ -156,6 +156,7 @@ def draft_report(
         missing = [str(path) for path in files if not path.is_file()]
         if missing:
             raise ValueError(f"Attachment is not a file: {', '.join(missing)}")
+        _submit.check_attachments(files)  # PNG/JPEG/PDF only — reject before drafting
         meta["attachments"] = json.dumps([str(path) for path in files])
     draft_id, path = _drafts.save(meta, body)
     return {

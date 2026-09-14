@@ -19,6 +19,7 @@ from __future__ import annotations
 import difflib
 import functools
 import json
+import mimetypes
 import os
 import re
 from pathlib import Path
@@ -27,6 +28,8 @@ from bbsa import api, richtext
 
 __all__ = [
     "AGREEMENTS",
+    "ATTACHMENT_TYPES",
+    "MAX_ATTACHMENTS",
     "PUSH_ENV",
     "SECTIONS",
     "push_enabled",
@@ -34,8 +37,17 @@ __all__ = [
     "resolve_type",
     "parse_report_markdown",
     "build_payload",
+    "check_attachments",
     "submit_report",
 ]
+
+# POST /uploads accepts only these for report attachments — the SubmitReport
+# dropzone's accept map — and at most five files. A `.py`/`.txt`/`.json` upload
+# 422s *after* the file is sent ("must be a file of type image/jpeg,image/png,
+# application/pdf"), so we reject it locally first, with a message that says what
+# to do instead.
+ATTACHMENT_TYPES = ("image/jpeg", "image/png", "application/pdf")
+MAX_ATTACHMENTS = 5
 
 # Mirrors the web form's yup schema regexes.
 _DOMAIN = re.compile(r"^(http[s]?://(www\.)?)([0-9A-Za-z\-*.@:%_+~#=]+)+(\.[a-zA-Z]{2,3})$")
@@ -105,6 +117,29 @@ def resolve_type(name: str) -> str:
     raise _bad(
         f"Unknown vulnerability type {name!r}.{hint} List them with 'bbsa reports types'."
     )
+
+
+def check_attachments(paths) -> None:
+    """Reject attachments the platform will refuse, before any upload happens.
+
+    Report attachments must be PNG, JPEG or PDF (max five). PoC scripts and text
+    or JSON evidence cannot be attached — they belong inline in the report body.
+    """
+    paths = list(paths)
+    if len(paths) > MAX_ATTACHMENTS:
+        raise _bad(
+            f"{len(paths)} attachments, but bugbounty.sa accepts at most "
+            f"{MAX_ATTACHMENTS} per report."
+        )
+    for path in paths:
+        mime = mimetypes.guess_type(str(path))[0]
+        if mime not in ATTACHMENT_TYPES:
+            raise _bad(
+                f"Attachment {Path(path).name!r} is {mime or 'an unrecognised type'}; "
+                "bugbounty.sa only accepts PNG, JPEG or PDF as report attachments. "
+                "Put PoC scripts and text/JSON evidence inline in the report body as "
+                "fenced code blocks, and attach a screenshot (.png) or a PDF instead."
+            )
 
 
 def parse_report_markdown(markdown: str) -> tuple[str, dict[str, str]]:

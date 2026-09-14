@@ -273,6 +273,7 @@ def _attachment_paths(meta: dict) -> list[Path]:
         raise api.ApiError(
             f"Attachment is not a file: {', '.join(missing)}", code="validation_error"
         )
+    submit.check_attachments(files)
     return files
 
 

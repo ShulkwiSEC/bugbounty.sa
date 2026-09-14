@@ -119,10 +119,15 @@ Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa r
 
 **bugbounty.sa does not render Markdown.** Its report fields are rich text (a Quill editor) that store HTML, so raw Markdown would show up as literal `**asterisks**`. bbsa converts for you into the tag set the platform's own toolbar produces: `h3`/`h4` headings (all Markdown heading levels fold into those two), `strong`, `em`, `s`, `code`, fenced blocks, blockquotes, ordered/bullet lists, and links. Nested lists flatten to one level and horizontal rules are dropped.
 
-Use repeatable `--attach PATH` when drafting to include the executable PoC and
-selected evidence. Drafting records and validates the local paths but uploads
-nothing. The operator-gated push uploads them first and sends their returned IDs
-with the report. Never attach credentials, unredacted PII, or unrelated files.
+Use repeatable `--attach PATH` when drafting to add evidence. **The platform
+accepts only PNG, JPEG and PDF attachments, at most five per report** — a `.py`,
+`.txt` or `.json` file is rejected (bbsa now refuses it at draft/push time
+instead of failing after a partial upload). So put the executable PoC script and
+any text/JSON evidence **inline in the report body** as fenced code blocks, and
+`--attach` only screenshots (`.png`) or PDFs. Drafting records and validates the
+local paths but uploads nothing; the operator-gated push uploads them first and
+sends their returned IDs with the report. Never attach credentials, unredacted
+PII, or unrelated files.
 
 The report submission API has no severity field. Include an evidence-backed CVSS
 vector and severity in Summary. A platform badge of `Unspecified` remains until
@@ -146,8 +151,10 @@ words alone, in minutes, and never has to ask a follow-up.
 - **Proof of Concept** — a copy-pasteable, deterministic reproduction: exact
   request(s) in fenced code blocks (method, path, headers, body), the real
   response showing the leak/effect, and the precondition (auth state, a second
-  account, a known id). Attach an executable PoC script that re-runs it and
-  asserts the result. Number the steps. No screenshots as the only evidence.
+  account, a known id). Include the executable PoC script and its real output
+  **inline** in fenced blocks (the platform won't accept a `.py`/`.txt`
+  attachment — only PNG/JPEG/PDF). Number the steps. No screenshots as the only
+  evidence.
 - **Impact** — the realistic worst case for *this* target and who it hurts, tied
   to what the PoC actually proved. Don't inflate; a triager downgrades a report
   that oversells.
