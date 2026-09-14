@@ -115,6 +115,8 @@ BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree   # only when the user asks
 
 Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa reports list` tagged `draft`, and are archived to `drafts/pushed/` once submitted. `bbsa reports show <draft-id>` reports what still blocks a push.
 
+**Re-drafting is idempotent.** A new draft that shares a pending draft's program *and* title overwrites it instead of creating a second copy, so you can iterate on a finding — fix wording, add a PoC, tighten the impact — by drafting it again without piling up `d4`/`d5` duplicates. Keep the `# Title` line stable across revisions of the same finding; change it and you get a new draft. To fork into a genuinely different report, give it a different title.
+
 **bugbounty.sa does not render Markdown.** Its report fields are rich text (a Quill editor) that store HTML, so raw Markdown would show up as literal `**asterisks**`. bbsa converts for you into the tag set the platform's own toolbar produces: `h3`/`h4` headings (all Markdown heading levels fold into those two), `strong`, `em`, `s`, `code`, fenced blocks, blockquotes, ordered/bullet lists, and links. Nested lists flatten to one level and horizontal rules are dropped.
 
 Use repeatable `--attach PATH` when drafting to include the executable PoC and
@@ -124,7 +126,43 @@ with the report. Never attach credentials, unredacted PII, or unrelated files.
 
 The report submission API has no severity field. Include an evidence-backed CVSS
 vector and severity in Summary. A platform badge of `Unspecified` remains until
-the platform's triage workflow assigns it; bbsa cannot set that badge.
+the platform's triage workflow assigns it; bbsa cannot set that badge — do not
+promise the user a severity number the platform will show.
+
+## Writing a report a triager wants to read
+
+A report is drafted once and cannot be edited after submission, so make the
+first version the good one. The bar is: a triager reproduces the bug from your
+words alone, in minutes, and never has to ask a follow-up.
+
+- **Title** — one specific sentence: the bug class, the exact endpoint, and the
+  concrete impact. `IDOR in POST /api/v1/bill/get discloses any subscriber's
+  partial national-ID digits` beats `IDOR vulnerability`. This is also the draft's
+  identity for de-duplication, so keep it stable while iterating.
+- **Summary** — what the bug is, where, and why it matters, in a few sentences,
+  with the CVSS vector *and* the score you claim (`CVSS:3.1/AV:N/... = 5.3
+  (Medium)`) and a one-line justification of the score. Lead with the fact, not
+  the story.
+- **Proof of Concept** — a copy-pasteable, deterministic reproduction: exact
+  request(s) in fenced code blocks (method, path, headers, body), the real
+  response showing the leak/effect, and the precondition (auth state, a second
+  account, a known id). Attach an executable PoC script that re-runs it and
+  asserts the result. Number the steps. No screenshots as the only evidence.
+- **Impact** — the realistic worst case for *this* target and who it hurts, tied
+  to what the PoC actually proved. Don't inflate; a triager downgrades a report
+  that oversells.
+- **Remediation** — concrete, ordered fixes the vendor can act on, plus how to
+  verify the fix. Name the root cause (missing object-level authz, a secret in a
+  client-served file), not just the symptom.
+- **Scope & safety** — confirm the target is in the program's scope
+  (`programs show <ID>`) before drafting. Redact secrets and PII in the report
+  body and in PoC output (last-N digits, `********`); never attach credentials,
+  raw PII, or unrelated files. State any deliberate limits you set (e.g. "did not
+  attempt login with the disclosed credential").
+- **Formatting** — write Markdown; bbsa renders it to the platform's rich text.
+  Emphasis, inline `code`, fenced blocks, lists, blockquotes and links all work,
+  and emphasis may wrap a `code` span. Each rendered section must stay under 5000
+  characters of HTML — `bbsa reports show <draft-id>` tells you if one is over.
 
 ## Gotchas
 
