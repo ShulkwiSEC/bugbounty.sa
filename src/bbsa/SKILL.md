@@ -108,7 +108,7 @@ bbsa reports types --search xss            # exact --type values live here
 bbsa reports draft --program 1475 \
   --domain https://example.com --endpoint /api/v1/users \
   --type 'Reflected - Non-Self' --parameter q \
-  --attach poc.py --attach evidence.har report.md
+  --attach screenshot.png report.md          # PoC script goes inline in the body
 bbsa reports show d1                       # review; says whether it is ready
 BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree   # only when the user asks
 ```
@@ -117,7 +117,18 @@ Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa r
 
 **Re-drafting is idempotent.** A new draft that shares a pending draft's program *and* title overwrites it instead of creating a second copy, so you can iterate on a finding — fix wording, add a PoC, tighten the impact — by drafting it again without piling up `d4`/`d5` duplicates. Keep the `# Title` line stable across revisions of the same finding; change it and you get a new draft. To fork into a genuinely different report, give it a different title.
 
-**bugbounty.sa does not render Markdown.** Its report fields are rich text (a Quill editor) that store HTML, so raw Markdown would show up as literal `**asterisks**`. bbsa converts for you into the tag set the platform's own toolbar produces: `h3`/`h4` headings (all Markdown heading levels fold into those two), `strong`, `em`, `s`, `code`, fenced blocks, blockquotes, ordered/bullet lists, and links. Nested lists flatten to one level and horizontal rules are dropped.
+**bugbounty.sa does not render Markdown.** Its report fields are a Quill WYSIWYG editor that stores HTML; nothing in that path parses Markdown, so raw Markdown shows up as literal `**asterisks**`. In the web editor, formatting comes only from toolbar buttons, Ctrl+B/Ctrl+U, or pasting already-rendered rich text — the only Markdown-like autoformat is `- ` / `1. ` at the start of a line starting a list. bbsa converts for you:
+
+| Markdown | Stored HTML |
+|---|---|
+| `#`/`##`, `###`+ | `<h3>`, `<h4>` |
+| `**bold**`, `~~strike~~` | `<strong>`, `<s>` |
+| fenced block | `<pre class="ql-syntax" spellcheck="false">` |
+| `> quote`, `- item`, `1. item` | `<blockquote>`, `<ul><li>`, `<ol><li>` |
+| `[text](url)` | `<a href="url" target="_blank">` |
+| `*italic*`, `` `code` `` | `<em>`, `<code>` — render, but have no toolbar button; prefer bold and fenced blocks |
+
+Nested lists flatten to one level and horizontal rules are dropped. The 5000-character cap counts stored HTML, not visible text — every `<` in a request becomes `&lt;`, so code-heavy sections fill up fast; trim responses to the lines that prove the bug. `bbsa reports push <id> --dry-run --agree` shows the exact HTML: if a field still contains literal `**`, `##` or ```` ``` ````, fix the source before anything is pushed.
 
 Use repeatable `--attach PATH` when drafting to add evidence. **The platform
 accepts only PNG, JPEG and PDF attachments, at most five per report** — a `.py`,
@@ -167,8 +178,8 @@ words alone, in minutes, and never has to ask a follow-up.
   raw PII, or unrelated files. State any deliberate limits you set (e.g. "did not
   attempt login with the disclosed credential").
 - **Formatting** — write Markdown; bbsa renders it to the platform's rich text.
-  Emphasis, inline `code`, fenced blocks, lists, blockquotes and links all work,
-  and emphasis may wrap a `code` span. Each rendered section must stay under 5000
+  Bold, fenced blocks, lists, blockquotes and links map to the editor's toolbar;
+  emphasis may wrap a `code` span. Each rendered section must stay under 5000
   characters of HTML — `bbsa reports show <draft-id>` tells you if one is over.
 
 ## Gotchas

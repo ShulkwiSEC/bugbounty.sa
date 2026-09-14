@@ -75,8 +75,9 @@ before assuming they still hold.
   HTML, capped at 5000 characters of HTML per field. Raw Markdown renders as
   literal `**asterisks**`, hence `richtext.py`.
 - Quill's toolbar offers only h3/h4, bold, underline, strike, blockquote,
-  code-block, lists, align, color, image, link — so that is the whole target tag
-  set. Stay inside it or reports stop being editable in the web UI.
+  code-block, lists, align, color, image, link — so that is the target tag set.
+  `richtext.py` also emits `em` and inline `code`, which render but have no
+  toolbar button. Stay inside the set or reports stop being editable in the web UI.
 - Vulnerability types are hardcoded in the frontend; there is no endpoint.
 - `recaptchaToken` is attached to every write by the web app. We send `null`,
   which is what the browser sends without grecaptcha. **Unverified against a real
