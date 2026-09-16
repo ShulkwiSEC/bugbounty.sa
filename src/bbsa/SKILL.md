@@ -22,7 +22,7 @@ BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree
 
 Use when the user wants data from bugbounty.sa: profile, programs, reports, invoices, finance, leaderboard, companies, or notifications; when they want a report drafted for a program; or when they need the token/MCP setup.
 
-**Not for**: editing or deleting platform data, or commenting on reports. The package exposes no such endpoints.
+**Not for**: editing or deleting platform data, or commenting on reports. The package exposes no such endpoints. Local drafts can be deleted.
 
 ## Preferred interface (default first)
 
@@ -93,7 +93,7 @@ bbsa reports list --json | jq -c '.data[] | select(.severity == "high")'
 
 ## MCP tools
 
-`list_programs`, `get_program_scope`, `list_reports`, `get_report`, `get_report_stats`, `list_vulnerability_types`, `list_submission_agreements`, `list_drafts`, `draft_report`, `get_wallet_balance`, `list_invoices`, `get_invoice_stats`, `list_transactions`, `get_transaction_stats`, `get_public_leaderboard`, `list_companies`, `get_company`, `list_notifications`. Resource: `bugbounty://me/profile`.
+`list_programs`, `get_program_scope`, `list_reports`, `get_report`, `get_report_stats`, `list_vulnerability_types`, `list_submission_agreements`, `list_drafts`, `draft_report`, `delete_draft`, `get_wallet_balance`, `list_invoices`, `get_invoice_stats`, `list_transactions`, `get_transaction_stats`, `get_public_leaderboard`, `list_companies`, `get_company`, `list_notifications`. Resource: `bugbounty://me/profile`.
 
 - `list_reports` returns each report's numeric `id` and slug.
 - `get_report(report_id_or_slug)` accepts either value and includes follow-up comments in `data.comments`.
@@ -113,7 +113,7 @@ bbsa reports show d1                       # review; says whether it is ready
 BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree   # only when the user asks
 ```
 
-Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa reports list` tagged `draft`, and are archived to `drafts/pushed/` once submitted. `bbsa reports show <draft-id>` reports what still blocks a push.
+Drafts live in `$XDG_DATA_HOME/bbsa/drafts` as plain Markdown, appear in `bbsa reports list` tagged `draft`, and are archived to `drafts/pushed/` once submitted. `bbsa reports show <draft-id>` reports what still blocks a push. `bbsa reports delete <draft-id>` permanently removes a pending draft — pushed drafts in `pushed/` are kept (they are the only local copy of a filed report).
 
 **Re-drafting is idempotent.** A new draft that shares a pending draft's program *and* title overwrites it instead of creating a second copy, so you can iterate on a finding — fix wording, add a PoC, tighten the impact — by drafting it again without piling up `d4`/`d5` duplicates. Keep the `# Title` line stable across revisions of the same finding; change it and you get a new draft. To fork into a genuinely different report, give it a different title.
 
@@ -199,7 +199,7 @@ words alone, in minutes, and never has to ask a follow-up.
 1. **Investigate open work** — `reports list`, then `reports show` for any still in triage; summarize status, severity, and next step per report.
 2. **Recon a program** — `programs list`, then `programs show` the highest-bounty public program; report scope, reward ranges, and domains.
 3. **Researcher briefing** — `leaderboard`, `notifications`, and `me`; compare the user's profile to the leaders.
-4. **Draft a finding** — `programs show <ID>` to confirm the target is in scope, `reports types --search <keyword>` for the exact type name, then `reports draft ...`. Report the draft id and path and stop there. If the user then asks you to submit it, `BBSA_ALLOW_PUSH=1 reports push <id> --agree`.
+4. **Draft a finding** — `programs show <ID>` to confirm the target is in scope, `reports types --search <keyword>` for the exact type name, then `reports draft ...`. Report the draft id and path and stop there. If the user then asks you to submit it, `BBSA_ALLOW_PUSH=1 reports push <id> --agree`. To discard a draft, `reports delete <id>`.
 
 ## Guardrails
 

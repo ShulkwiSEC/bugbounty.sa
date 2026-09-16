@@ -63,6 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
         "  bbsa reports types --search xss\n"
         "  bbsa reports draft --program 1475 --domain https://x.com \\\n"
         "      --endpoint /api/v1/users --type 'SQL Injection' report.md\n"
+        "  bbsa reports delete d1\n"
         "  BBSA_ALLOW_PUSH=1 bbsa reports push d1 --agree\n"
         "  bbsa finance invoices\n"
         "  bbsa finance stats\n"
