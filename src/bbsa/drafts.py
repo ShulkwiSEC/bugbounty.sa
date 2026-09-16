@@ -31,6 +31,8 @@ __all__ = [
     "load",
     "load_all",
     "archive",
+    "delete",
+    "extract_title",
 ]
 
 # Frontmatter keys, in the order they are written back out.
@@ -94,6 +96,12 @@ def parse(raw: str) -> tuple[dict[str, str], str]:
     return meta, match.group(2).strip()
 
 
+def extract_title(body: str) -> str:
+    """Extract the title from a draft body's '# Title' heading."""
+    match = _TITLE.search(body)
+    return match.group(1).strip() if match else ""
+
+
 def _render(meta: dict[str, str], body: str) -> str:
     ordered = [(k, meta[k]) for k in META_KEYS if str(meta.get(k, "")).strip()]
     ordered += [(k, v) for k, v in meta.items() if k not in META_KEYS and str(v).strip()]
@@ -155,3 +163,11 @@ def archive(draft_id: str, report: dict | None = None) -> Path:
     destination.write_text(_render(meta, body), encoding="utf-8")
     path.unlink()
     return destination
+
+
+def delete(draft_id: str) -> Path:
+    """Permanently remove a local draft. Only pending drafts — pushed drafts
+    live in pushed/ and are the only local copy of a filed report."""
+    meta, body, path = load(draft_id)
+    path.unlink()
+    return path

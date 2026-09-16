@@ -346,6 +346,10 @@ def cmd_reports_draft(args: argparse.Namespace) -> int:
             meta[key] = str(value)
     if args.title:
         meta["title"] = args.title
+    if not meta.get("title"):
+        title = drafts.extract_title(body)
+        if title:
+            meta["title"] = title
     if getattr(args, "attach", None):
         meta["attachments"] = json.dumps([str(Path(path).resolve()) for path in args.attach])
 
@@ -442,4 +446,13 @@ def cmd_reports_push(args: argparse.Namespace) -> int:
                    f"{archive_error}\n", sys.stderr)
         )
     suggest_next_step(f"bbsa reports show {report.get('slug') or report.get('id')}")
+    return EXIT_OK
+
+
+def cmd_reports_delete(args: argparse.Namespace) -> int:
+    path = drafts.delete(args.id)
+    if args.json:
+        print_json_success({"id": args.id, "path": str(path)})
+        return EXIT_OK
+    print(green(f"Draft {args.id} deleted."))
     return EXIT_OK

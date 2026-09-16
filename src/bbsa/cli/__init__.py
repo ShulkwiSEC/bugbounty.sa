@@ -33,6 +33,7 @@ from bbsa.cli.commands.reports import (
     cmd_reports_draft,
     cmd_reports_push,
     cmd_reports_types,
+    cmd_reports_delete,
 )
 
 __all__ = ["main"]
@@ -159,6 +160,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_rp.set_defaults(handler=cmd_reports_push)
 
+    p_rdel = reports_sub.add_parser(
+        "delete",
+        parents=[common],
+        help="Permanently remove a local draft",
+        description="Delete a local draft file. Pushed drafts (in pushed/) are kept — "
+        "they are the only local copy of a filed report. Only pending drafts can be deleted.",
+    )
+    p_rdel.add_argument("id", help="Draft ID, e.g. d1")
+    p_rdel.set_defaults(handler=cmd_reports_delete)
+
     # finance
     p_finance = sub.add_parser(
         "finance", parents=[common], help="Invoices and payout statistics"
@@ -182,7 +193,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-_SUBCOMMAND_CHILDREN = {"programs": ["list", "show"], "reports": ["list", "show", "stats", "types", "draft", "push"], "finance": ["invoices", "stats"]}
+_SUBCOMMAND_CHILDREN = {"programs": ["list", "show"], "reports": ["list", "show", "stats", "types", "draft", "push", "delete"], "finance": ["invoices", "stats"]}
 
 
 def main(argv: list[str] | None = None) -> int:

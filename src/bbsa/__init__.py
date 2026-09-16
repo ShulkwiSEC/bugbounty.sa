@@ -91,6 +91,14 @@ def list_drafts() -> dict:
 
 
 @mcp.tool()
+def delete_draft(draft_id: str) -> dict:
+    """Permanently delete a local draft. Only pending drafts — pushed drafts
+    live in pushed/ and are the only local copy of a filed report."""
+    path = _drafts.delete(draft_id)
+    return {"data": {"id": draft_id, "path": str(path)}, "meta": {"deleted": True}}
+
+
+@mcp.tool()
 def draft_report(
     program_id: int,
     title: str,
@@ -146,6 +154,7 @@ def draft_report(
     )
     meta = {
         "program": program_id,
+        "title": title,
         "domain": domain,
         "endpoint": endpoint,
         "type": _submit.resolve_type(type),
